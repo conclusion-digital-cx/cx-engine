@@ -1,0 +1,9 @@
+.pageblocks {
+    /* background: rgba(85, 72, 72, 0.22); */
+    border:1px solid transparent;
+}
+
+.pageblocks:hover {
+    border:1px solid grey;
+    /* background: rgba(85, 72, 72, 0.22); */
+}

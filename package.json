@@ -1,0 +1,12 @@
+{
+  "name": "cx-engine",
+  "version": "1.0.0",
+  "description": "A simple PHP based CMS",
+  "main": "index.js",
+  "scripts": {
+    "start": "php -S localhost:8666"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

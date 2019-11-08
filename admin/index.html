@@ -1,0 +1,65 @@
+<html>
+
+<head>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+    <!-- <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet"> -->
+    <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
+
+</head>
+
+<body>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/vue-router@2.x/dist/vue-router.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+
+    <link href="/admin/style.css" rel="stylesheet">
+
+
+    <div id="app">
+        <v-app>
+            <v-app-bar app>
+                <v-toolbar-title>Admin</v-toolbar-title>
+
+                <v-spacer></v-spacer>
+
+                <template v-if="$vuetify.breakpoint.smAndUp">
+                    <v-btn href="/" icon>
+                        <v-icon>mdi-export-variant</v-icon>
+                    </v-btn>
+                    <!-- <v-btn icon>
+                          <v-icon>mdi-delete-circle</v-icon>
+                        </v-btn>
+                        <v-btn icon>
+                          <v-icon>mdi-plus-circle</v-icon>
+                        </v-btn> -->
+                </template>
+
+                <v-toolbar-items>
+                    <v-btn to='/' text>Dashboard</v-btn>
+                    <v-btn to='/layouts' text>Layouts</v-btn>
+                    <!-- <v-btn to='/collections/pages' text>Pages</v-btn> -->
+                    <v-btn to='/collections' text>Collections</v-btn>
+                    <v-btn to='/blocks' text>Blocks</v-btn>
+                    <v-btn href='/' text>To site</v-btn>
+                </v-toolbar-items>
+
+
+            </v-app-bar>
+
+            <v-content>
+                <v-container>
+                    <router-view>
+                        Loading...
+                    </router-view>
+                </v-container>
+            </v-content>
+
+        </v-app>
+    </div>
+
+    <script type="module" src='/admin/app.js'></script>
+</body>
+
+</html>
