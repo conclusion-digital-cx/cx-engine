@@ -119,26 +119,28 @@ class Cx {
             // Debug
             if($this->debug) debugToConsole($page);
 
+            $renderBlock = function($blocks) {
+                $body = "";
+                foreach($blocks as $block) {
+                    $name = $block->name;
+    
+                    ob_start();
+                    include "blocks/$name.php";
+                    $html = ob_get_contents();
+                    ob_end_clean();
+    
+                    $body .= $html;
+                }
+                return $body;
+            };
+
             // Server side render blocks
             $blocks = json_decode($page['pageblocks']);
             if($this->debug) debugToConsole($blocks);
-            $body = "";
-            foreach($blocks as $block) {
-                if($this->debug) debugToConsole($block);
-
-                $name = $block->name;
-
-                ob_start();
-                include "blocks/$name.php";
-                $html = ob_get_contents();
-                ob_end_clean();
-
-                $body .= $html;
-            }
 
             // Set body
             // $page['body'] = "Test";
-            $page['body'] = $body;
+            $page['body'] = $blocks ? $renderBlock($blocks) : $page['body'];
             // $page->body = $body;
 
             // =============
