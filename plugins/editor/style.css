@@ -1,9 +1,25 @@
-.pageblocks {
+@import "grid.css";
+
+.blocks {
     /* background: rgba(85, 72, 72, 0.22); */
-    border:1px solid transparent;
+    border: 1px solid transparent;
 }
 
-.pageblocks:hover {
-    border:1px solid grey;
+.blocks:hover {
+    border: 1px solid #80808038;
     /* background: rgba(85, 72, 72, 0.22); */
 }
+
+.blocks__heading {
+    padding: 5px;
+    font-size: 12px;
+}
+
+.blocks .blocks__heading {
+    visibility: hidden
+}
+
+.blocks:hover .blocks__heading {
+    visibility: visible
+}
+

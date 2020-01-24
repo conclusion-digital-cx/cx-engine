@@ -34,6 +34,10 @@ export default {
   name="pages" 
   title-key="url" 
   @itemClick="itemClick"
-  :props="props" />
+  :props="props" >
+<template #card>
+  <!-- <iframe style="width:100%;" src="http://localhost:8666/"/> -->
+</template>
+  </List>
   `
 }

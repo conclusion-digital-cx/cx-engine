@@ -1,13 +1,17 @@
 import "./Grid.js"
-import './utils.js'
+import editable from './editable.js'
 
 // Get blocks
-import paragraph from './blocks/paragraph.js'
-import list from './blocks/list.js'
-const blocksJs = {
-  paragraph,
-  list
-}
+// import paragraph from './blocks/paragraph.js'
+// import list from './blocks/list.js'
+// const blocksJs = {
+//   paragraph,
+//   list
+// }
+
+// Register globally
+Vue.component('editable', editable)
+
 
 const html = (strings) => strings[0]
 
@@ -21,11 +25,28 @@ const getPageId = () => {
   return window.settings.pageId || 1
 }
 
-const blocksBaseUrl = `/blocks`
+const loadJS = function (url, location = document.body) {
+  return new Promise((resolve, reject) => {
+    //url is URL of external file, implementationCode is the code
+    //to be called from the file, location is the location to 
+    //insert the <script> element
 
-var app = new Vue({
+    const scriptTag = document.createElement('script');
+    scriptTag.src = url;
+
+    // scriptTag.onload = implementationCode;
+    scriptTag.onreadystatechange = resolve;
+
+    location.appendChild(scriptTag);
+  })
+};
+
+// loadJS('yourcode.js', yourCodeToBeCalled, document.body);
+
+const app = {
   components: {
-    ...blocksJs
+    // ...blocksJs
+    editable
   },
 
   el: '#app',
@@ -36,16 +57,20 @@ var app = new Vue({
   }),
 
   data: {
-    blocksJs,
+    // blocksJs,
     message: 'You loaded this page on ' + new Date().toLocaleString(),
     blocks: [],
     page: {
       url: ''
     },
+    form: {
+      preview: false,
+      editor: localStorage.getItem('editor') !== 'false',
+    },
     loading: false,
     snackbar: false,
-    pageblocks: [],
-    editor: localStorage.getItem('editor') !== 'false'
+    // blocks: [],
+    components: []
   },
 
   watch: {
@@ -58,72 +83,60 @@ var app = new Vue({
     let resp
     resp = await fetch(`/api/pages/${id}`)
     this.page = await resp.json()
-    this.pageblocks = JSON.parse(this.page.pageblocks) || []
+    // this.blocks = JSON.parse(this.page.blocks) || []
 
-    // TEST
-    this.pageblocks = [
-      { component: 'paragraph', name: 'paragraph' }
+    // Initial (from server pageId ?)
+    this.blocks = [
+      ...this.page.blocks || []
+      // { component: 'paragraph', name: 'paragraph' }
     ]
 
-    resp = await fetch('/api/blocks')
-    this.blocks = await resp.json()
+    // =====
+    // PHP Blocks
+    // resp = await fetch('/api/blocks')
+    // this.components = await resp.json()
+
+    // =====
+    // Dynamicly load JS components
+    // TODO get from api
+    // const respjs = await loadJS('/blocks/heading.js');
+    // console.log(respjs)
+    const components = [
+      '/blocksjs/paragraph.js',
+      '/blocksjs/heading.js',
+      '/blocksjs/picture.js',
+      '/blocksjs/list.js',
+      '/blocksjs/repeater.js',
+      // '/blocksjs/columns.js',
+      // DEV
+      '/blocksjs/columnsdual.js',
+      '/blocksjs/paragraphdual.js',
+    ]
+
+    components.forEach(component => {
+      import(component)
+        .then((module) => {
+          // console.log(module.default)
+          this.components.push(module.default)
+          // console.log(this.components)
+        });
+    })
   },
 
   methods: {
-
-    // Serverside PHP block
-    async addBlock(item) {
-      // Render
-      // const url = `${blocksBaseUrl}/${item.name}.php` // || '/blocks/image.php'
-      const url = `/api/blocks/${item.name}/render` // || '/blocks/image.php'
-      const resp = await fetch(url, { method: 'GET' })
-      item.render = await resp.text()
-
-      this.pageblocks.push(item)
-    },
-
-    // Clientside JS block
-    async addBlockJs(item) {
-      console.log(item)
-      this.pageblocks.push({ component: item.name, name: item.name, render: '' })
-      // this.pageblocks.push(item)
-    },
-
-    upBlock(item) {
-      const array = this.pageblocks
-      const index = array.indexOf(item)
-      array.move(index, 1, index - 1)
-    },
-
-    downBlock(item) {
-      const array = this.pageblocks
-      const index = array.indexOf(item)
-      array.move(index, 1, index + 2)
-    },
-
-    deleteBlock(item) {
-      const array = this.pageblocks
-      array.splice(array.indexOf(item), 1);
-    },
-
-    onEnter(item, $event) {
-      console.log('enter', item, $event)
-      // this.addBlock({ name: 'richtext' })
-      this.pageblocks.push({ component: 'paragraph', name: 'paragraph', render: $event })
-
-    },
-
+    // Save page
     async save(page) {
-      const { pageblocks } = this
+      const { blocks } = this
 
       // Render client side ;)
-      const bodyRenderedBlocks = pageblocks.map(block => block.render)
+      const bodyRenderedBlocks = blocks.map(block => block.render)
 
       // Create page object
       const doc = {
         ...page,
         body: bodyRenderedBlocks.join(''),
-        pageblocks: JSON.stringify(pageblocks)
+        // blocks: JSON.stringify(blocks)
+        blocks
       }
 
       try {
@@ -140,21 +153,27 @@ var app = new Vue({
         this.loading = false
         this.snackbar = true
       }
-
       // const json = await resp.json()
+    },
+
+    onInput(newblocks) {
+      // console.log("newblocks",newblocks)
     }
   },
+
   template: html`
   <v-app>
     <v-container fluid>
   
     <div>
-    <!-- {{pageblocks}} -->
-
-
+    <!-- {{blocks}} -->
 
 <!-- <v-btn icon @click="editor = !editor"><v-icon>add</v-icon></v-btn> -->
-<!-- <v-switch label="editor" v-model='editor'></v-switch> -->
+<div class="d-flex">
+<!-- <v-switch class="mr-5" label="editor" v-model='form.editor'></v-switch> -->
+<v-switch label="preview" v-model='form.preview'></v-switch>
+</div>
+
 <v-btn
 @click="save(page)"
               absolute
@@ -167,55 +186,13 @@ var app = new Vue({
             >
               <v-icon>save</v-icon>
             </v-btn>
-            
-    <!-- Block library -->
-    <v-menu
-      v-model="menu"
-      :close-on-content-click="false"
-      :nudge-width="200"
-      offset-x
-    >
-      <template v-slot:activator="{ on }">
-        <v-btn
-          color="indigo"
-          dark
-          v-on="on"
-        >
-          Add block
-        </v-btn>
-      </template>
 
-      <v-card>
-      <grid :items="blocks">
-          <template #card="{item}">
-            <v-card @click="addBlock(item)" class="show-actions-on-hover">
-              <v-card-title>
-                <div class="text-truncate" style="width:60%">
-                  {{ item.name || 'No title' }}
-                </div>
-                <v-spacer />
-              </v-card-title>
-            </v-card>
-          </template>
-        </grid>
-
-        <grid :items="blocksJs">
-          <template #card="{item}">
-            <v-card @click="addBlockJs(item)" class="show-actions-on-hover">
-              <v-card-title>
-                <div class="text-truncate" style="width:60%">
-                  {{ item.name || 'No title' }}
-                </div>
-                <v-spacer />
-              </v-card-title>
-            </v-card>
-          </template>
-        </grid>
-
-      </v-card>
-    </v-menu>
-
-
+<!-- <div>
+{{blocks}}
+</div> -->
+<!-- <div>
+Total {{blocks.length}} blocks
+</div> -->
 
     <v-snackbar
       v-model="snackbar"
@@ -231,44 +208,12 @@ var app = new Vue({
       </v-btn>
     </v-snackbar>
 
-
-    <div v-for='(item,index) in pageblocks'>
-      <div class="pageblocks">
-        <div class="pageblocks__heading">
-          <div style="width:60%;float:left; ">
-            <strong>{{item.name}} </strong>
-            <!-- ({{index}}) -->
-          </div>
-
-          <div class="actions text-right">
-            <v-btn icon text class="pull-right" @click.prevent="upBlock(item)">
-              <v-icon>keyboard_arrow_up</v-icon>
-            </v-btn>
-
-            <v-btn icon text class="pull-right" @click.prevent="downBlock(item)">
-              <v-icon>keyboard_arrow_down</v-icon>
-            </v-btn>
-
-            <v-btn icon text class="pull-right" @click.prevent="deleteBlock(item)">
-              X
-            </v-btn>
-          </div>
-        </div>
-        
-           <!-- JS Edit modus -->
-        <component :is="item.component"  @done="onEnter(item, $event)"/>
-
-          <!-- Pre rendered block -->
-          <div v-html="item.render"></div>
-
-        </div>
-
-       
-      </div>
-    </div>
-  
+    <editable :preview="form.preview" :components="components" v-model="blocks" @input="onInput"/>
+  </div>
 
     </v-container>
   
   </v-app>`
-})
+}
+
+const vue = new Vue(app)

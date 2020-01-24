@@ -1,7 +1,7 @@
 const html = (strings) => strings[0]
 
 export default {
-    name: 'list',
+    name: 'repeater',
 
     data() {
         return {
@@ -15,8 +15,10 @@ export default {
     },
 
     template: html`
-    Collection: 
-    <input v-model="content" type="text" placeholder="e.g. news"/>
-    <v-btn @click="$emit('save',content)">save</v-btn>
+    <div>
+        Collection: 
+        <input v-model="content" type="text" placeholder="e.g. news"/>
+        <v-btn @click="$emit('save',content)">save</v-btn>
+    </div>
     `
 }

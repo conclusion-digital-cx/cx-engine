@@ -19,7 +19,6 @@
     <div id='app'>
         <div class="container">
             <?=$page->body?>
-            <?=$page->content?>
         </div>
     </div>
     

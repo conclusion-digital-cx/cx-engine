@@ -8,6 +8,73 @@ $db = $cx->db;
 
 $router->setBasePath('/api');
 
+
+
+// ******
+// Image upload
+// ******
+$router->map( 'POST', '/upload', function() use($db) {
+    // print_r($_FILES);
+    $fileToUpload = $_FILES["fileToUpload"];
+
+    $target_dir = "../uploads/";
+    $target_file = $target_dir . basename($fileToUpload["name"]);
+    $uploadOk = 1;
+    $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
+
+    // =============
+    // Validation
+    // =============
+    // Check if image file is a actual image or fake image
+    if(isset($_POST["submit"])) {
+        $check = getimagesize($fileToUpload["tmp_name"]);
+        if($check !== false) {
+            $message = "File is an image - " . $check["mime"] . ".";
+            $uploadOk = 1;
+        } else {
+            $message = "File is not an image.";
+            $uploadOk = 0;
+        }
+    }
+    // Check if file already exists
+    if (file_exists($target_file)) {
+        $message = "Sorry, file already exists.";
+        $uploadOk = 0;
+    }
+    // Check file size
+    if ($fileToUpload["size"] > 500000) {
+        $message = "Sorry, your file is too large.";
+        $uploadOk = 0;
+    }
+    // Allow certain file formats
+    if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
+    && $imageFileType != "gif" ) {
+        $message = "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
+        $uploadOk = 0;
+    }
+
+    // Check if $uploadOk is set to 0 by an error
+    if ($uploadOk == 0) {
+        $message = "Sorry, your file was not uploaded.";
+        http_response_code(404);
+    // if everything is ok, try to upload file
+    } else {
+        if (move_uploaded_file($fileToUpload["tmp_name"], $target_file)) {
+            $message = "The file ". basename( $fileToUpload["name"]). " has been uploaded.";
+        } else {
+            $message = "Sorry, there was an error uploading your file.";
+            http_response_code(404);
+        }
+    }   
+
+    header("content-type:application/json");
+    $res = new StdClass;
+    $res->message = $message;
+    $res->url = "http://localhost:8666/uploads/".basename( $fileToUpload["name"]);
+    $res->debug = $fileToUpload;
+    echo json_encode($res);
+});
+
 // =========
 // REST API
 // =========
@@ -18,33 +85,11 @@ $router->map( 'GET', '', function() {
 // ******
 // Specials
 // ******
-
-// PUT /pages/:id
-// $router->map( 'PUT', '/pages/[i:id]', function($id) use($db) {
-//     $inputJSON = file_get_contents('php://input');
-//     $body = json_decode($inputJSON, TRUE); //convert JSON into array
-    
-//     $result = $db->updateById('pages', $id, $body);
-    
-//     header("content-type:application/json");
-//     $json = json_encode($result);
-//     echo $json;
-// });
-
-
 $router->map( 'GET', '/blocks/[a:id]/render', function($id) use($db) {
     include "../blocks/$id.php";
 });
 
 // Special: create table
-/*
-CREATE TABLE "news" (
-	"id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
-	"title"	TEXT NOT NULL,
-	"body"	TEXT,
-	"author"	TEXT
-);
-*/
 $router->map( 'GET', '/collections/[a:id]/create', function($id) use($db) {
     // Get schema from collections
     $result = $db->findById('collections', $id);
@@ -176,6 +221,12 @@ $router->map( 'POST', '/[a:entity]', function($entity) use($db) {
 // GET /:entity/:id
 $router->map( 'GET', '/[a:entity]/[i:id]', function($entity, $id) use($db) {
     $result = $db->findById($entity, $id);
+
+    // HACKY Special
+    if($result['blocks']) {
+        $result['blocks'] = json_decode($result['blocks']);
+    }
+
     header("content-type:application/json");
     $json = json_encode($result);
     echo $json;
@@ -183,10 +234,17 @@ $router->map( 'GET', '/[a:entity]/[i:id]', function($entity, $id) use($db) {
 
 // PUT /:entity/:id
 $router->map( 'PUT', '/[a:entity]/[i:id]', function($entity, $id) use($db) {
+
+
     try {
         $inputJSON = file_get_contents('php://input');
         $body = json_decode($inputJSON, TRUE); //convert JSON into array
     
+        // HACKY Special
+        if($body['blocks']) {
+            $body['blocks'] = json_encode($body['blocks']);
+        }
+
         $result = $db->updateById($entity, $id, $body);
         if(!$result) {
             throw new Exception();
