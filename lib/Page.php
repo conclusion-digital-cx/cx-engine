@@ -17,9 +17,10 @@ class Page
 
     public function __construct($page)
     {
-        $this->id = isset($page['id']) ? $page['id'] : 0;
-        $this->title = isset($page['title']) ? $page['title'] : 'no title';
-        $this->body = isset($page['body']) ? $page['body'] : "";
+        $this->id = isset($page->id) ? $page->id : 0;
+        $this->title = isset($page->title) ? $page->title : 'no title';
+        $this->body = isset($page->body) ? $page->body : "";
+        $this->blocks = isset($page->blocks) ? $page->blocks : [];
         // print_r($page);
     }
 

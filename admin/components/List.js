@@ -105,6 +105,7 @@ export default {
                   @click="editItem(item)"
                   class="show-actions-on-hover"> -->
 
+
                   <v-card 
                   @click="itemClick(item)"
                   class="show-actions-on-hover">
@@ -114,6 +115,7 @@ export default {
                           </div>
                           <v-spacer />
 
+                          
                           <div class="actions text-right">
                             <v-btn icon text class="pull-right" @click.stop="editItem(item)">
                             <v-icon>edit</v-icon>
@@ -126,6 +128,8 @@ export default {
                             </v-btn>
                           </div>
                       </v-card-title>
+
+                      <slot name="card"/>
                   </v-card>
               </template>
           </Grid>

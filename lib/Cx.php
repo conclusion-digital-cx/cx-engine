@@ -29,10 +29,11 @@ function debugToConsole($data, $context = 'Debug in Console') {
 }
 
 
-// Add plugin to page
-function add($name, $what = "") {
+// // Add plugin to page
+// function add($name, $what = "") {
     
-}
+// }
+
 
 // Plugin resolver
 function block($name) {
@@ -92,8 +93,14 @@ class Cx {
         $this->notfound = $cb;
     }
 
-    // Create page
+    // Match request. Returns Page() object
     function match() {
+        $obj = $this->_match();
+        return new Page($obj);
+    }
+
+    // Match request. Returns object from Database
+    function _match() {
         // match current request url
         $match = $this->router->match();
 
@@ -115,49 +122,67 @@ class Cx {
             $sql ="SELECT * from pages WHERE url='".SQLite3::escapeString($requestUrl)."' LIMIT 1";
             $ret = $db->query($sql);
             $page = $ret->fetchArray(SQLITE3_ASSOC);
+            // print_r($page);
 
-            // Debug
-            if($this->debug) debugToConsole($page);
-
-            $renderBlock = function($blocks) {
-                $body = "";
-                foreach($blocks as $block) {
-                    $name = $block->name;
-    
-                    ob_start();
-                    include "blocks/$name.php";
-                    $html = ob_get_contents();
-                    ob_end_clean();
-    
-                    $body .= $html;
-                }
-                return $body;
-            };
-
-            // Server side render blocks
-            $blocks = json_decode($page['pageblocks']);
-            if($this->debug) debugToConsole($blocks);
-
-            // Set body
-            // $page['body'] = "Test";
-            $page['body'] = $blocks ? $renderBlock($blocks) : $page['body'];
-            // $page->body = $body;
-
-            // =============
-            // Page not found
-            // =============
-            if(!$page) {
-                // if($this->notfound) {
-                //     $closure = $this->notfound;
-                //     $page = $closure($requestUrl);
-                // } else {
-                    // no route was matched
-                    header( $_SERVER["SERVER_PROTOCOL"] . ' 404 Not Found');
-                    $page = "<h1>Page not found</h1><pre><?= $requestUrl ?></pre>";
-                // }
-            } else {
-                return new Page($page);
+            if(!$page) { 
+                echo "Page not found: $requestUrl";
+                return false;
             }
+
+            // Convert to object
+            $page = (Object)$page;
+            $page->blocks = json_decode($page->blocks);
+            return $page;
         }
     }
+
+
+
+    function render($blocks) {
+        $renderPhpBlock = function($blocks) {
+            // print_r($blocks);
+            $body = "";
+            foreach($blocks as $block) {
+                $name = $block->name;
+        
+                ob_start();
+                include "blocks/$name.php";
+                $html = ob_get_contents();
+                ob_end_clean();
+        
+                $body .= $html;
+            }
+            return $body;
+        };
+
+        $renderJsBlock = function($blocks) {
+            // print_r($blocks);
+            $body = "";
+            foreach($blocks as $block) {
+                $name = $block->name;
+                $body .= $block->render;
+            }
+            return $body;
+        };
+
+        // TODO render PHP blocks also ?
+        
+        return $renderJsBlock($blocks);
+    }
  }
+
+         // =============
+        // Page not found
+        // =============
+        // if(!$page) {
+        //     // if($this->notfound) {
+        //     //     $closure = $this->notfound;
+        //     //     $page = $closure($requestUrl);
+        //     // } else {
+        //         // no route was matched
+        //         header( $_SERVER["SERVER_PROTOCOL"] . ' 404 Not Found');
+        //         $page = "<h1>Page not found</h1>;
+        //     // }
+        // } else {
+        //     return new Page($page);
+        // }
