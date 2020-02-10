@@ -3,6 +3,7 @@ import PagesList from './pages/index.js'
 import Collections from './collections/index.js'
 import Dashboard from './Dashboard.js'
 import Collections_name from './collections/_name.js'
+import NavigationDrawer from './components/NavigationDrawer.js'
 
 const routes = [
     { path: '/', component: Dashboard, props: true },
@@ -39,8 +40,26 @@ const router = new VueRouter({
     routes
 })
 
-var app = new Vue({
+const app = new Vue({
+    data: vm => ({
+        items: [
+           { to: '/', text:'Dashboard'},
+           { to: '/layouts', text:'Layouts'},
+           { to: '/pages', text:'Pages'},
+           { to: '/collections/pages', text:'Pages'},
+           { to: '/collections', text:'Collections'},
+           { to: '/blocks', text:'Blocks'},
+        //    { to: '/', text:'Dashboard'},
+        ]   
+    }),
+    components: {
+        NavigationDrawer
+    },
     router,
     el: '#app',
-    vuetify: new Vuetify()
+    vuetify: new Vuetify({
+        theme: {
+            dark: true
+        }
+    })
 })

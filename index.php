@@ -1,22 +1,12 @@
 <?php
 
 include "lib/Cx.php";
+$config = include("config.php");
 
-$cx = new Cx(__DIR__."/storage/test.db");
+$cx = new Cx();
 $cx->debug = false;
 
 $page = $cx->match();
-
-// Debug
-// print_r($page);
-
-// // ==========
-// // Global helper 
-// // ==========
-// function get($id) {
-// global $page;
-//     print_r($page);
-// }
 
 if($page) {
     $page->body = $cx->render($page->blocks);

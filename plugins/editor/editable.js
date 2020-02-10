@@ -141,10 +141,10 @@ export default {
     <template v-else>
       <!-- Blocks -->
       <div v-for="(item,index) in blocks" :key="index">
-        <div class="blocks">
-          <div class="blocks__heading">
-            <div style="width:60%;float:left; ">
-              <strong>{{item.name}}</strong>
+        <div class="block">
+          <div class="block__heading">
+            <div class="block__title" >
+              {{item.name}}
               <!-- ({{index}}) -->
             </div>
 

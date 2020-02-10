@@ -60,7 +60,7 @@ class Page
 </head>
 
 <body>
-<div id="app">
+<div id="app" class="v-application--wrap">
     '.$this->body.'
 </div>
 '.$this->footer.'

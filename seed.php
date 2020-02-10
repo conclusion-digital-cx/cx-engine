@@ -1,12 +1,12 @@
 <?php
 
 // Example 
-include "lib/CxEngine.php";
+include "lib/Cx.php";
 
-$cx = new CxEngine();
+$cx = new Cx();
 
+echo "<p>Installing...</p>";
 seedDb($cx->db);
-echo "Installed...";
 
 // ========
 
@@ -22,13 +22,9 @@ EOF;
    $ret = $db->exec($sql);
    if(!$ret){
       echo $db->lastErrorMsg();
+      echo "<p>View <a href='/'>website</a></p>\n";
    } else {
-      echo "Table created successfully\n";
+      echo "<p>Table created successfully</p>\n";
+      echo "<p>View <a href='/'>website</a></p>\n";
    }
 }
-
-    // CREATE TABLE BLOCKS
-    // (
-    //     ID INT PRIMARY KEY     NOT NULL,
-    //     NAME           TEXT    NOT NULL,
-    // );

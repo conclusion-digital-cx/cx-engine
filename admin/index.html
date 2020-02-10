@@ -19,7 +19,10 @@
 
     <div id="app">
         <v-app>
-            <v-app-bar app>
+            <v-app-bar 
+            clipped-left
+            dense app 
+            color="deep-purple accent-4">
                 <v-toolbar-title>Admin</v-toolbar-title>
 
                 <v-spacer></v-spacer>
@@ -36,18 +39,17 @@
                         </v-btn> -->
                 </template>
 
-                <v-toolbar-items>
+                <!-- <v-toolbar-items>
                     <v-btn to='/' text>Dashboard</v-btn>
                     <v-btn to='/layouts' text>Layouts</v-btn>
                     <v-btn to='/pages' text>Pages</v-btn>
-                    <!-- <v-btn to='/collections/pages' text>Pages</v-btn> -->
+                    <v-btn to='/collections/pages' text>Pages</v-btn>
                     <v-btn to='/collections' text>Collections</v-btn>
                     <v-btn to='/blocks' text>Blocks</v-btn>
                     <v-btn href='/' text>To site</v-btn>
-                </v-toolbar-items>
-
-
+                </v-toolbar-items> -->
             </v-app-bar>
+
 
             <v-content>
                 <v-container>
@@ -56,8 +58,9 @@
                     </router-view>
                 </v-container>
             </v-content>
+            <navigation-drawer :items="items"/>
 
-        </v-app>
+        </v-app >
     </div>
 
     <script type="module" src='/admin/app.js'></script>

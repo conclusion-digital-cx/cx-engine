@@ -1,23 +1,28 @@
 <?php
 
 include "../lib/Cx.php";
+$config = include("../config.php");
 
-$cx = new Cx(__DIR__.'/../storage/test.db');
+// Get Config
+$uploaddir = $config->uploaddir;
+
+$cx = new Cx($config->dbpath);
 $router = $cx->router;
 $db = $cx->db;
 
 $router->setBasePath('/api');
 
-
+// CORS
+header("Access-Control-Allow-Origin: *");
 
 // ******
 // Image upload
 // ******
-$router->map( 'POST', '/upload', function() use($db) {
+$router->map( 'POST', '/upload', function() use($db, $uploaddir) {
     // print_r($_FILES);
     $fileToUpload = $_FILES["fileToUpload"];
 
-    $target_dir = "../uploads/";
+    $target_dir = $uploaddir; // "../uploads/";
     $target_file = $target_dir . basename($fileToUpload["name"]);
     $uploadOk = 1;
     $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
@@ -180,6 +185,21 @@ $router->map( 'GET', '/blocks', function() use($db) {
     echo json_encode($files);
 });
 
+// Blocks
+$router->map( 'GET', '/blocksjs', function() use($db) {
+    $path = "../blocksjs/";
+    $files = glob(  "$path*.*" );
+    foreach ($files as &$value) {
+        // Remove ../
+        $value = substr($value, strlen('..'));
+        // $value = substr($value, strlen($path));
+        // $value = substr($value, 0, -3); // Extension
+      }  
+
+    header("content-type:application/json");
+    echo json_encode($files);
+});
+
 // ******************
 // Collections
 // ******************
@@ -264,7 +284,7 @@ $router->map( 'PUT', '/[a:entity]/[i:id]', function($entity, $id) use($db) {
 });
 
 
-// PUT /:entity/:id
+// DELETE /:entity/:id
 $router->map( 'DELETE', '/[a:entity]/[i:id]', function($entity, $id) use($db) {
     $result = $db->deleteById($entity, $id);
 

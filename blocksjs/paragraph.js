@@ -28,7 +28,7 @@ export default {
         :value="value"
         @input="onInput($event.target.value)"
         @keydown.enter.prevent="onEnter"
-        style="overflow: hidden; overflow-wrap: break-word; width: 100%; resize: none;">
+        style="overflow: hidden; overflow-wrap: break-word; width: 100%;">
     </textarea>
     `
 }
