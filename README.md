@@ -3,6 +3,11 @@ A online block editor + light headless PHP backend.
 # What is it
 Cx Engine is a light online page editor and comes with a basic PHP based restfull API.
 
+# Roadmap
+- [ ] [api] Add roles and protect with JWT tokens
+- [ ] [admin] Plugin management
+- [ ] [blocks] Add example blocks to connect with prismic
+
 # Headless API
 It comes out of the box with a light PHP based restfull API driven by a SQLite database. This let's you quickly scaffold a project and suits most light production websites. For high traffic you can also pick any other headless restfull api or Saas vendors like prismic or contentfull.
 
