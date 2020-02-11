@@ -34,15 +34,19 @@ export default {
   template: html`
   <div>
 
-  <h1>
+  <!-- <h1>
 collections
-</h1>
+</h1> -->
 
   <List :id="id" 
   :name="name" 
   item-title="url" 
   @itemClick="itemClick"
-  :props="props" />
+  :props="props" >
+  <template #title>
+    Collections
+  </template>
+  </List>
   </div>
   `
 }

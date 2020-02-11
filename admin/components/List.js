@@ -14,7 +14,7 @@ export default {
     title: { type: String, default: "" },
 
     titleKey: { type: String, default: "title" },
-    props: { type: Object, default() { return { }} }
+    props: { type: Object, default() { return {} } }
   },
 
   data() {
@@ -51,7 +51,7 @@ export default {
     async deleteItem(item) {
       try {
         this.loading = true
-        const resp = await fetch(`/api/${this.name}/${item.id}`, { 
+        const resp = await fetch(`/api/${this.name}/${item.id}`, {
           method: 'DELETE',
         })
 
@@ -69,8 +69,8 @@ export default {
       this.form = item
     },
 
-    itemClick (item) {
-      this.$emit('itemClick',item)
+    itemClick(item) {
+      this.$emit('itemClick', item)
     }
   },
 
@@ -89,9 +89,11 @@ export default {
       <!-- <slot/> -->
       
       <v-row>
-        <v-btn class="btn" @click="dialog = true">Create new</v-btn>
+        <slot name="title"/>
         <slot name="actions-left"/>
         <v-spacer/>
+        <v-btn class="primary" 
+        @click="dialog = true">Create new</v-btn>
         <slot name="actions-right"/>
       </v-row>
 
@@ -104,7 +106,6 @@ export default {
                   :href="item.url"
                   @click="editItem(item)"
                   class="show-actions-on-hover"> -->
-
 
                   <v-card 
                   @click="itemClick(item)"

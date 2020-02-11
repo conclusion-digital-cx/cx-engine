@@ -14,6 +14,8 @@ export default {
 
   data() {
     return {
+      
+
       loading: false,
 
       collection: {
@@ -29,6 +31,26 @@ export default {
   },
 
   computed: {
+    _breadcrumbs() {
+      return [
+        {
+          text: 'Dashboard',
+          disabled: false,
+          href: '/',
+        },
+        {
+          text: 'Collections',
+          disabled: false,
+          href: '/collections',
+        },
+        {
+          text: this.name,
+          disabled: true,
+          href: 'breadcrumbs_link_2',
+        },
+      ]
+    },
+
     _itemTitle() {
       return this.collection.titleKey || 'title'
     }
@@ -96,9 +118,10 @@ export default {
     <!-- {{schema}} -->
     <!-- {{_itemTitle}} -->
 
-<h1>
+    <v-breadcrumbs :items="_breadcrumbs"></v-breadcrumbs>
+<!-- <h1>
   <a href="#/collections">collections</a> > {{name}}
-</h1>
+</h1> -->
 
     <List :id="id" 
     :name="name" 

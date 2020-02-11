@@ -28,7 +28,7 @@ export default {
           <!-- Grid -->
           <template v-if="!loading">
             <template v-for="(item,index) in items">
-              <v-flex :key="index" xs3>
+              <v-flex :key="index" xs12 md3>
                 <slot name="card" :item="item">
                   <!-- Fallback content -->
                   {{ item }}

@@ -1,10 +1,10 @@
 A online block editor + light headless PHP backend.
 
 # What is it
-Cx Engine is a light online page editor and comes with a basic PHP based RESTFull API.
+Cx Engine is a light online page editor and comes with a basic PHP based restfull API.
 
 # Headless API
-It comes out of the box with a light PHP based RESTFull API driven by a SQLite database. This let's you quickly scaffold a project and suits most light production websites. For high traffic you can also pick any other headless RESTAPI or Saas vendors like prismic or contentfull.
+It comes out of the box with a light PHP based restfull API driven by a SQLite database. This let's you quickly scaffold a project and suits most light production websites. For high traffic you can also pick any other headless restfull api or Saas vendors like prismic or contentfull.
 
 # API Endpoints
 - POST /upload
@@ -35,7 +35,9 @@ http://localhost:8666
 http://localhost:8666/admin
 http://localhost:8666/control ( WIP )
 
-# Api
+# Restfull Api
+The restfull api is build around the altorouter and a tiny sqlite ORM library.
+https://altorouter.com/
 http://localhost:8666/api
 
 # Blocks

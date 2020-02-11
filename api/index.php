@@ -238,14 +238,21 @@ $router->map( 'POST', '/[a:entity]', function($entity) use($db) {
     }
 });
 
-// GET /:entity/:id
-$router->map( 'GET', '/[a:entity]/[i:id]', function($entity, $id) use($db) {
+// GET /:entity/:id HACKY Special
+$router->map( 'GET', '/blocks/[i:id]', function($entity, $id) use($db) {
     $result = $db->findById($entity, $id);
 
-    // HACKY Special
     if($result['blocks']) {
         $result['blocks'] = json_decode($result['blocks']);
     }
+
+    header("content-type:application/json");
+    $json = json_encode($result);
+    echo $json;
+});
+
+$router->map( 'GET', '/[a:entity]/[i:id]', function($entity, $id) use($db) {
+    $result = $db->findById($entity, $id);
 
     header("content-type:application/json");
     $json = json_encode($result);
