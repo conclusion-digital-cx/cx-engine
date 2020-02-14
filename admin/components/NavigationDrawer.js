@@ -1,4 +1,5 @@
 // https://github.com/vuetifyjs/vuetify/blob/master/packages/docs/src/examples/layouts/google-contacts.vue
+const html = (strings) => strings[0]
 
 export default {
   props: {
@@ -8,27 +9,12 @@ export default {
       default () {
         return [
             { url: '/dashboard', icon: 'home', text: 'Dashboard' },
-            // Bookings
-            // { icon: 'insert_invitation', heading: 'Bookings' },
-            // { url: '/booknow', icon: 'add', text: 'Add booking' },
-            { url: '/clients', icon: 'perm_identity', text: 'Contacts' },
-            // { url: '/calendar', icon: 'insert_invitation', text: 'Calendar' },
-            { url: '/calendar',
-              icon: 'insert_invitation',
-              text: 'Calendar' },
-            // { url: '/gantt', icon: 'insert_invitation', text: 'Calendar' },
-            { url: '/orders', icon: 'event_note', text: 'Orders' },
-            {
-              url: '/bookings',
-              icon: 'event_note',
-              text: 'Bookings'
-            }
         ]
       }
     }
   },
   data: () => ({}),
-  template: `<v-navigation-drawer
+  template: html`<v-navigation-drawer
   :value="value"
   app
   clipped
@@ -80,7 +66,7 @@ export default {
           <v-list-item
             v-if="!child.hide"
             :key="i"
-            :to="child.to"
+            :to="child.path"
           >
   
             <v-list-item-content>
@@ -96,7 +82,7 @@ export default {
       <v-list-item
         v-else-if="!item.hide"
         :key="item.index"
-        :to="item.to"
+        :to="item.path"
       >
 
         <v-list-item-content>

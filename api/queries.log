@@ -1,0 +1,13 @@
+
+UPDATE "pages" SET "id" = '6', "title" = NULL, "url" = '/oplossingen/boilers/', "body" = '', "blocks" = 'a:2:{i:0;a:3:{s:4:"name";s:7:"heading";s:6:"render";s:0:"";s:5:"props";a:1:{s:5:"value";s:7:"Boilers";}}i:1;a:3:{s:4:"name";s:9:"paragraph";s:6:"render";s:0:"";s:5:"props";a:1:{s:5:"value";s:11:"Pretty cool";}}}', "cache" = NULL, "state" = NULL, "createdAt" = NULL WHERE "id" = '6'
+SELECT * FROM "pages" WHERE "id" = '6' LIMIT 1
+
+UPDATE "pages" SET "id" = '6', "title" = NULL, "url" = '/oplossingen/boilers/', "body" = '', "blocks" = 'a:1:{i:0;a:3:{s:4:"name";s:7:"heading";s:6:"render";s:0:"";s:5:"props";a:1:{s:5:"value";s:9:"efawefawe";}}}', "cache" = NULL, "state" = NULL, "createdAt" = NULL WHERE "id" = '6'
+SELECT * FROM "pages" WHERE "id" = '6' LIMIT 1
+
+SELECT * FROM "pages" WHERE "id" = '6' LIMIT 1
+
+SELECT * FROM "pages" WHERE "state" IS NULL
+SELECT * FROM "pages" WHERE "id" = '6' LIMIT 1
+SELECT * FROM "pages" WHERE "state" IS NULL
+SELECT * FROM "pages" WHERE "id" = '6' LIMIT 1

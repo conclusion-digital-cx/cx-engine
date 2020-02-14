@@ -1,15 +1,23 @@
-A online block editor + light headless PHP backend.
-
-# What is it
-Cx Engine is a light online page editor and comes with a basic PHP based restfull API.
+# Intro
+Cx Engine is an online page editor combined with a headless restfull API written in PHP.
 
 # Roadmap
 - [ ] [api] Add roles and protect with JWT tokens
 - [ ] [admin] Plugin management
 - [ ] [blocks] Add example blocks to connect with prismic
 
+# Installation
+1. Rename `config.examples.php` to `config.php`.
+2. Edit the settings to suit your needs.
+3. Copy the files to your server.
+4. Enter the url of your server in a webbrowser and you are good to go.
+
+# Development
+Run `npm start` to spin up a PHP development server. 
+This will start a new development server at http://localhost:8666/. This readme will use futher use this host to show examples.
+
 # Headless API
-It comes out of the box with a light PHP based restfull API driven by a SQLite database. This let's you quickly scaffold a project and suits most light production websites. For high traffic you can also pick any other headless restfull api or Saas vendors like prismic or contentfull.
+It comes out of the box with a light Restfull API that supports all SQL databases (including MySQL, MSSQL, SQLite, MariaDB, PostgreSQL, Sybase, Oracle and more). This let's you quickly scaffold a project.
 
 # API Endpoints
 - POST /upload
@@ -25,20 +33,20 @@ It comes out of the box with a light PHP based restfull API driven by a SQLite d
 - GET http://localhost:8666/api/blocks
 - GET http://localhost:8666/api/blocksjs
 
-# Installation
-1. Rename `storage_example` to `storage`
-2. Copy the files to your server
-3. Go to your website
-
-# Development
-Run `npm start` to spin up a PHP development server. 
-This will start a new development server at http://localhost:8666/. 
-In this readme this will be used as host, change this according to the server you are running on.
+# Theming
+To create a theme, just create a new folder inside `/themes`. And create an `index.php` file. This file will be used to generate the main layout. Inside this file you will have to define `zones`. The following zones are mandatory for a proper working and good integration with plugins.
+```php
+    'head' => [],
+    'afterbody' => [],
+    'content' => [],
+    'menu' => [],
+    'main' => [],
+    'footer' => []
+```
 
 # Website
 http://localhost:8666
 http://localhost:8666/admin
-http://localhost:8666/control ( WIP )
 
 # Restfull Api
 The restfull api is build around the altorouter and a tiny sqlite ORM library.
@@ -52,4 +60,10 @@ Client side blocks can be found in `/blocksjs`. You can create your own blocks i
 
 ## Your first block
 ...
+
+
+## Your 
+
+
+
 

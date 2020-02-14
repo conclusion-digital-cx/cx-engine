@@ -1,6 +1,14 @@
 <?php
 
 return (object)[
+    'theme' => 'inventum',
+    'debug' => true,
     'uploaddir' => __DIR__."/uploads", 
-    'dbpath' => __DIR__."/test.db"  // __DIR__."/storage/test.db"
+    'db' => [
+        // https://medoo.in/
+        'database_type' => 'sqlite',
+        'database_file' => __DIR__."/db.db",
+        'server' => 'localhost',
+        "logging" => true,
+    ]
 ];

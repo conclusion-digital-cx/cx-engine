@@ -1,1 +1,4 @@
 /uploads
+/themes/*
+!/themes/2020
+config.php

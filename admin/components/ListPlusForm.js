@@ -14,6 +14,7 @@ export default {
     title: { type: String, default: "" },
 
     titleKey: { type: String, default: "title" },
+    props: { type: Object, default() { return {} } }
   },
 
   data() {
@@ -63,11 +64,13 @@ export default {
     },
 
     editItem(item) {
-      this.$emit('click:edit', item)
+      console.log(item)
+      this.dialog = true
+      this.form = item
     },
 
     itemClick(item) {
-      this.$emit('click:item', item)
+      this.$emit('itemClick', item)
     }
   },
 
@@ -75,40 +78,45 @@ export default {
     <v-container grid-list-xl>
       <h1>{{title}}</h1>
 
-      <slot/>
+      <Form 
+      v-model="dialog" 
+      :props="props" 
+      :form="form" 
+      @success="fetch"
+      :name="name"
+      />
+
+      <!-- <slot/> -->
       
       <v-row>
         <slot name="title"/>
         <slot name="actions-left"/>
         <v-spacer/>
         <v-btn class="primary" 
-        @click="$emit('click:create')">Create new</v-btn>
+        @click="dialog = true">Create new</v-btn>
         <slot name="actions-right"/>
       </v-row>
 
         <v-layout wrap>
+    
           <!-- Grid -->
           <Grid :loading="loading" :items="items">
               <template #card="{item}">
-
+              <!-- <v-card 
+                  :href="item.url"
+                  @click="editItem(item)"
+                  class="show-actions-on-hover"> -->
 
                   <v-card 
                   @click="itemClick(item)"
                   class="show-actions-on-hover">
-
-                  <v-img
-      class="white--text align-end"
-      height="200px"
-      :src="item.image || 'https://cdn.vuetifyjs.com/images/cards/docks.jpg'"
-    >
-    </v-img>
-
                       <v-card-title>
                           <div class="text-truncate" style="width:50%">
                               {{ item[titleKey] || item.name || item.title || 'No title' }}
                           </div>
                           <v-spacer />
 
+                          
                           <div class="actions text-right">
                             <v-btn icon text class="pull-right" @click.stop="editItem(item)">
                             <v-icon>edit</v-icon>

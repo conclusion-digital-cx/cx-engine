@@ -3,7 +3,4 @@ module.exports = {
     "plugin:vue/recommended",
     "standard"
   ],
-  plugins: [
-    'vuetify'
-  ],
 }

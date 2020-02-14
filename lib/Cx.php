@@ -7,6 +7,71 @@ include "Page.php";
 // ============
 // Global helpers
 // ============
+function debug($what, $title = "")
+{
+    global $config;
+    if (isset($_GET['debug']) || $config->debug) {
+        debugToConsole($what, $title);
+    }
+}
+
+function getBlocksFromPath($path = "./blocks")
+{
+    $blocks = [];
+    $files = glob("$path/*.*");
+
+    foreach ($files as &$file) {
+        // Remove ../
+        // $value = substr($value, strlen('../'));
+        $value = substr($file, strlen("$path/"));
+        $value = substr($value, 0, -4); // Extension
+
+        // Add to blocks
+        $blocks[$value] = (object) [
+            'file' => $file,
+            'name' => $value
+            // 'zone' => 'afterbody'
+        ];
+    }
+    return $blocks;
+}
+
+function addBlocksFromPath($path = "./blocks")
+{
+    global $blocks;
+    $newBlocks = getBlocksFromPath($path);
+    $blocks = array_merge($blocks, $newBlocks);
+}
+
+function zone($name)
+{
+    global $blocks, $zones;
+    global $page;   // Context for render
+
+    $blocksInZone = $zones[$name];
+    debug("Render zone: $name");
+    foreach ($blocksInZone as $mixed) {
+        // $block = $blocks[$blockName];
+        $block = $mixed;
+
+        if(isset($block->file)) {
+            include $block->file;
+        } else {
+            echo $block;
+        }
+    }
+}
+
+function block($blockName)
+{
+    global $blocks;
+    global $page;   // Context for render
+    
+    $block = $blocks[$blockName];
+    include $block->file;
+}
+
+
 
 /**
  * Simple helper to debug to the console
@@ -16,57 +81,30 @@ include "Page.php";
  *
  * @return string
  */
-function debugToConsole($data, $context = 'Debug in Console') {
+function debugToConsole($data, $context = 'Debug in Console')
+{
 
     // Buffering to solve problems frameworks, like header() in this and not a solid return.
     ob_start();
 
-    $output  = 'console.info(\'' . $context . ':\');';
+    $output = "";
+    // $output  = 'console.info(\'' . $context . ':\');';
     $output .= 'console.log(' . json_encode($data) . ');';
     $output  = sprintf('<script>%s</script>', $output);
 
     echo $output;
 }
 
-
-// // Add plugin to page
-// function add($name, $what = "") {
-    
-// }
-
-
-// Plugin resolver
-function block($name) {
-
-    // Include : index.php
-    $file = "blocks/$name/index.php";
-    if(file_exists($file)) {
-        include $file;
-    }
-    
-    // Include once : index.css
-    $file = "blocks/$name/style.css";
-    if(file_exists($file)) {
-        echo "<style>";
-        require_once $file;
-        echo "</style>";
-    }
-
-    // Resolve template areas : footer.html / head.html / body.html
-    $file = "blocks/$name/footer.html";
-    if(file_exists($file)) {
-        echo "<style>";
-        require_once $file;
-        echo "</style>";
-    }
-}
-
-class Cx {
+class Cx
+{
     public $notfound;
     public $debug = false;
 
-    function __construct($dbpath = "test.db") {
+    function __construct($config)
+    {
         $router = new AltoRouter();
+
+        $dbpath = $config->db['database_file'];
 
         // ======================
         // Search routes
@@ -77,7 +115,7 @@ class Cx {
         // Database
         $db = new CxDb($dbpath);
 
-        if(!$db) {
+        if (!$db) {
             echo $db->lastErrorMsg();
         } else {
             // echo "Opened database successfully\n";
@@ -89,48 +127,54 @@ class Cx {
     }
 
     // Set callback
-    function notfound($cb) {
+    function notfound($cb)
+    {
         $this->notfound = $cb;
     }
 
     // Match request. Returns Page() object
-    function match() {
-        $obj = $this->_match();
+    function getPage()
+    {
+        $obj = $this->match();
         return new Page($obj);
     }
 
     // Match request. Returns object from Database
-    function _match() {
+    function match()
+    {
         // match current request url
         $match = $this->router->match();
 
         // call closure or throw 404 status
-        if( is_array($match) && is_callable( $match['target'] ) ) {
-            call_user_func_array( $match['target'], $match['params'] ); 
+        if (is_array($match) && is_callable($match['target'])) {
+            call_user_func_array($match['target'], $match['params']);
         } else {
             $requestUrl = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '/';
-            
+
             // =============
             // Get Page from DB
             // =============
             $db = $this->db;
-            $requestUrl = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '/';
+            // $requestUrl = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '/';
 
             // Remove editor from url
-            $requestUrl = str_replace("?editor","",$requestUrl );
+            $requestUrl = strtok($_SERVER["REQUEST_URI"],'?'); // str_replace("?editor", "", $requestUrl);
+            debug($requestUrl);
 
-            $sql ="SELECT * from pages WHERE url='".SQLite3::escapeString($requestUrl)."' LIMIT 1";
+            $url = SQLite3::escapeString($requestUrl);
+            $sql = "SELECT * from pages WHERE url='$url' LIMIT 1";
             $ret = $db->query($sql);
             $page = $ret->fetchArray(SQLITE3_ASSOC);
-            // print_r($page);
+            debug($page);
 
-            if(!$page) { 
-                echo "Page not found: $requestUrl";
+            if (!$page) {
+                // header($_SERVER["SERVER_PROTOCOL"] . ' 404 Not Found');
+                // exit("Page not found: $requestUrl");
                 return false;
             }
 
             // Convert to object
-            $page = (Object)$page;
+            $page = (object) $page;
             $page->blocks = json_decode($page->blocks);
             return $page;
         }
@@ -138,27 +182,28 @@ class Cx {
 
 
 
-    function render($blocks) {
-        $renderPhpBlock = function($blocks) {
+    function render($blocks)
+    {
+        $renderPhpBlock = function ($blocks) {
             // print_r($blocks);
             $body = "";
-            foreach($blocks as $block) {
+            foreach ($blocks as $block) {
                 $name = $block->name;
-        
+
                 ob_start();
                 include "blocks/$name.php";
                 $html = ob_get_contents();
                 ob_end_clean();
-        
+
                 $body .= $html;
             }
             return $body;
         };
 
-        $renderJsBlock = function($blocks) {
+        $renderJsBlock = function ($blocks) {
             // print_r($blocks);
             $body = "";
-            foreach($blocks as $block) {
+            foreach ($blocks as $block) {
                 $name = $block->name;
                 $body .= $block->render;
             }
@@ -166,23 +211,7 @@ class Cx {
         };
 
         // TODO render PHP blocks also ?
-        
+
         return $renderJsBlock($blocks);
     }
- }
-
-         // =============
-        // Page not found
-        // =============
-        // if(!$page) {
-        //     // if($this->notfound) {
-        //     //     $closure = $this->notfound;
-        //     //     $page = $closure($requestUrl);
-        //     // } else {
-        //         // no route was matched
-        //         header( $_SERVER["SERVER_PROTOCOL"] . ' 404 Not Found');
-        //         $page = "<h1>Page not found</h1>;
-        //     // }
-        // } else {
-        //     return new Page($page);
-        // }
+}

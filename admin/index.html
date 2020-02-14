@@ -2,51 +2,34 @@
 
 <head>
     <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
-    <!-- <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet"> -->
+    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
 
+    <!-- DEPRECATE in favor for materialdesignicons -->
+    <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
 </head>
 
 <body>
 
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script src="https://unpkg.com/vue-router@2.x/dist/vue-router.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.js"></script>
 
     <link href="/admin/style.css" rel="stylesheet">
 
 
     <div id="app">
         <v-app>
-            <v-app-bar 
-            clipped-left
-            dense app 
-            color="deep-purple accent-4">
+            <v-app-bar clipped-left dense app color="deep-purple accent-4">
                 <v-toolbar-title>Admin</v-toolbar-title>
 
                 <v-spacer></v-spacer>
 
-                <template v-if="$vuetify.breakpoint.smAndUp">
-                    <v-btn href="/" icon>
-                        <v-icon>mdi-export-variant</v-icon>
-                    </v-btn>
-                    <!-- <v-btn icon>
-                          <v-icon>mdi-delete-circle</v-icon>
-                        </v-btn>
-                        <v-btn icon>
-                          <v-icon>mdi-plus-circle</v-icon>
-                        </v-btn> -->
-                </template>
-
                 <v-toolbar-items>
-                    <!-- <v-btn to='/' text>Dashboard</v-btn>
-                    <v-btn to='/layouts' text>Layouts</v-btn>
-                    <v-btn to='/pages' text>Pages</v-btn>
-                    <v-btn to='/collections/pages' text>Pages</v-btn>
-                    <v-btn to='/collections' text>Collections</v-btn>
-                    <v-btn to='/blocks' text>Blocks</v-btn> -->
-                    <v-btn href='/' text>To site</v-btn>
+                    <v-btn target="_blank" href='/' text>
+                        <v-icon>mdi-export-variant</v-icon>
+                        To site
+                    </v-btn>
                 </v-toolbar-items>
             </v-app-bar>
 
@@ -56,14 +39,22 @@
                     <router-view>
                         Loading...
                     </router-view>
+
+                    <v-snackbar v-model="snackbar">
+                        {{ text }}
+                        <v-btn color="pink" text @click="snackbar = false">
+                            Close
+                        </v-btn>
+                    </v-snackbar>
                 </v-container>
             </v-content>
-            <navigation-drawer :items="items"/>
+            <navigation-drawer :items="_items" />
 
-        </v-app >
+
+        </v-app>
     </div>
 
-    <script type="module" src='/admin/app.js'></script>
+    <script type="module" src='/admin/main.js'></script>
 </body>
 
 </html>
