@@ -19,7 +19,6 @@ return [
     //     ],
     // ],
     'get' => function ($row) {
-        // Computed fields
         return [
             'blocks' => json_decode($row['blocks'])
         ];

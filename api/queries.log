@@ -187,3 +187,218 @@ SELECT * FROM "users" WHERE "role" = '1'
 SELECT * FROM "roles"
 SELECT * FROM "roles" WHERE "name" = 'admin'
 SELECT * FROM "users" WHERE "role" = '3'
+SELECT * FROM "collections"
+SELECT * FROM "collections"
+SELECT * FROM "collections"
+SELECT * FROM "collections"
+SELECT * FROM "collections"
+SELECT * FROM "collections"
+SELECT * FROM "collections"
+SELECT * FROM "collections"
+SELECT * FROM "collections"
+SELECT * FROM "collections"
+SELECT * FROM "collections"
+SELECT * FROM "" WHERE "id" IS NULL LIMIT 1
+SELECT * FROM "" WHERE "id" IS NULL LIMIT 1
+SELECT * FROM "" WHERE "id" IS NULL LIMIT 1
+SELECT * FROM "" WHERE "id" IS NULL LIMIT 1
+SELECT * FROM "users" WHERE "username" IS NULL AND "password" = '123' LIMIT 1
+SELECT * FROM "users" WHERE "username" = 'test@test.nl' AND "password" = '123' LIMIT 1
+SELECT * FROM "users" WHERE "email" = 'test@test.nl' AND "password" = '123' LIMIT 1
+SELECT * FROM "users" WHERE "email" = 'test@test.nl' AND "password" = '123' LIMIT 1
+SELECT * FROM "users" WHERE "email" = 'test@test.nl' AND "password" = '123' LIMIT 1
+SELECT * FROM "users" WHERE "email" = 'jellehak@gmail.com' AND "password" = '123' LIMIT 1
+SELECT * FROM "users" WHERE "email" = 'jellehak@gmail.com' AND "password" = '123' LIMIT 1
+SELECT * FROM "users" WHERE "email" = 'jellehak@gmail.com' AND "password" = '123' LIMIT 1
+SELECT * FROM "users" WHERE "email" = 'test@test.nl' AND "password" = '123' LIMIT 1
+SELECT * FROM "users" WHERE "email" = 'test@test.nl' AND "password" = '123' LIMIT 1
+SELECT * FROM "users" WHERE "email" = 'jellehak@gmail.com' AND "password" = '123' LIMIT 1
+SELECT * FROM "users" WHERE "email" = 'jellehak@gmail.com' AND "password" = '123' LIMIT 1
+SELECT * FROM "users" WHERE "email" = 'jellehak@gmail.com' AND "password" = '123' LIMIT 1
+SELECT * FROM "users" WHERE "email" = 'test@test.nl' AND "password" = '123' LIMIT 1
+SELECT * FROM "users" WHERE "email" = 'test@test.nl' AND "password" = '123' LIMIT 1
+SELECT * FROM "users" WHERE "email" = 'test@test.nl' AND "password" = '123' LIMIT 1
+SELECT * FROM "users" WHERE "email" = 'test@test.nl' AND "password" = '123' LIMIT 1
+SELECT * FROM "users" WHERE "email" = 'test@test.nl' AND "password" = '123' LIMIT 1
+SELECT * FROM "users" WHERE "email" = 'test@test.nl' AND "password" = '123' LIMIT 1
+SELECT * FROM "users" WHERE "email" = 'jellehak@gmail.com' AND "password" = '123' LIMIT 1
+SELECT * FROM "users" WHERE "email" = 'jellehak@gmail.com' AND "password" = '123' LIMIT 1
+SELECT * FROM "users" WHERE "email" = 'jellehak@gmail.com' AND "password" = '123' LIMIT 1
+SELECT * FROM "users" WHERE "email" = 'test@test.nl' AND "password" = '123' LIMIT 1
+SELECT * FROM "users" WHERE "email" = 'test@test.nl' AND "password" = '123' LIMIT 1
+SELECT * FROM "users" WHERE "email" = 'test@test.nl' AND "password" = '123' LIMIT 1
+SELECT * FROM "users" WHERE "email" = 'jellehak@gmail.com' AND "password" = '123' LIMIT 1
+SELECT * FROM "users" WHERE "email" = 'test@test.nl' AND "password" = '123' LIMIT 1
+SELECT * FROM "users" WHERE "email" = 'jellehak@gmail.com' AND "password" = '123' LIMIT 1
+SELECT * FROM "users" WHERE "email" = 'jellehak@gmail.com' AND "password" = '123' LIMIT 1
+SELECT * FROM "users" WHERE "email" = 'jellehak@gmail.com' AND "password" = '123' LIMIT 1
+SELECT * FROM "users" WHERE "email" = 'jellehak@gmail.com' AND "password" = '123' LIMIT 1
+SELECT * FROM "users" WHERE "email" = 'jellehak@gmail.com' AND "password" = '123' LIMIT 1
+SELECT * FROM "users" WHERE "email" = 'jellehak@gmail.com' AND "password" = '123' LIMIT 1
+SELECT * FROM "users" WHERE "email" = 'jellehak@gmail.com' AND "password" = '123' LIMIT 1
+SELECT * FROM "users" WHERE "email" = 'jellehak@gmail.com' AND "password" = '123' LIMIT 1
+SELECT * FROM "types"
+SELECT * FROM "users" WHERE "email" = 'jellehak@gmail.com' AND "password" = '123' LIMIT 1
+SELECT * FROM "types"
+SELECT * FROM "users" WHERE "email" = 'jellehak@gmail.com' AND "password" = '123' LIMIT 1
+SELECT * FROM "types"
+SELECT * FROM "types"
+SELECT * FROM "types"
+SELECT * FROM "types"
+SELECT * FROM "types"
+SELECT * FROM "types"
+SELECT * FROM "types"
+SELECT * FROM "types"
+SELECT * FROM "types"
+SELECT * FROM "types"
+SELECT * FROM "types"
+SELECT * FROM "types"
+SELECT * FROM "types"
+SELECT * FROM "types"
+SELECT * FROM "types"
+SELECT * FROM "types"
+SELECT * FROM "types"
+SELECT * FROM "types"
+SELECT * FROM "types"
+SELECT * FROM "types"
+SELECT * FROM "types"
+SELECT * FROM "users" WHERE "email" = 'jellehak@gmail.com' AND "password" = '123' LIMIT 1
+SELECT * FROM "types"
+SELECT * FROM "types"
+SELECT * FROM "types"
+SELECT * FROM "types"
+SELECT * FROM "types"
+SELECT * FROM "types"
+SELECT * FROM "types"
+SELECT * FROM "types"
+SELECT * FROM "types"
+SELECT * FROM "types"
+SELECT * FROM "types"
+SELECT * FROM "types"
+SELECT * FROM "types"
+SELECT * FROM "types"
+SELECT * FROM "types"
+SELECT * FROM "types"
+SELECT * FROM "types"
+SELECT * FROM "types"
+SELECT * FROM "types"
+SELECT * FROM "types"
+SELECT * FROM "types"
+SELECT * FROM "types"
+SELECT * FROM "types"
+SELECT * FROM "types"
+SELECT * FROM "types"
+SELECT * FROM "types"
+SELECT * FROM "types"
+SELECT * FROM "types" WHERE "name" = 'menus'
+SELECT * FROM "menus"
+SELECT * FROM "types" WHERE "name" = 'pages'
+SELECT * FROM "pages"
+SELECT * FROM "types" WHERE "name" = 'menus'
+SELECT * FROM "menus"
+SELECT * FROM "types"
+SELECT * FROM "types"
+SELECT * FROM "types" WHERE "name" = 'menus'
+SELECT * FROM "menus"
+SELECT * FROM "types"
+SELECT * FROM "types"
+SELECT * FROM "types" WHERE "name" = 'menus'
+SELECT * FROM "menus"
+SELECT * FROM "types"
+SELECT * FROM "types"
+SELECT * FROM "types" WHERE "name" = 'menus'
+SELECT * FROM "menus"
+SELECT * FROM "types" WHERE "name" = 'news'
+SELECT * FROM "news"
+SELECT * FROM "types"
+SELECT * FROM "types" WHERE "name" = 'news'
+SELECT * FROM "news"
+SELECT * FROM "types"
+SELECT * FROM "types"
+SELECT * FROM "types" WHERE "name" = 'news'
+SELECT * FROM "news"
+SELECT * FROM "types"
+SELECT * FROM "types" WHERE "name" = 'news'
+SELECT * FROM "news"
+SELECT * FROM "types"
+SELECT * FROM "types"
+SELECT * FROM "types" WHERE "name" = 'news'
+SELECT * FROM "news"
+SELECT * FROM "types"
+SELECT * FROM "types"
+SELECT * FROM "types" WHERE "name" = 'news'
+SELECT * FROM "news"
+SELECT * FROM "types"
+SELECT * FROM "types"
+SELECT * FROM "types" WHERE "name" = 'news'
+SELECT * FROM "news"
+SELECT * FROM "types"
+SELECT * FROM "types"
+SELECT * FROM "types" WHERE "name" = 'news'
+SELECT * FROM "news"
+SELECT * FROM "types"
+SELECT * FROM "types" WHERE "name" = 'news'
+SELECT * FROM "news"
+SELECT * FROM "types" WHERE "name" = 'menus'
+SELECT * FROM "menus"
+SELECT * FROM "types" WHERE "name" = 'media'
+SELECT * FROM "media"
+SELECT * FROM "types" WHERE "name" = 'news'
+SELECT * FROM "news"
+SELECT * FROM "types" WHERE "name" = 'news'
+SELECT * FROM "news"
+SELECT * FROM "types" WHERE "name" = 'news'
+SELECT * FROM "news"
+SELECT * FROM "types"
+SELECT * FROM "types"
+
+
+
+SELECT * FROM "pages"
+SELECT * FROM "pages"
+SELECT * FROM "pages"
+SELECT * FROM "pages"
+SELECT * FROM "pages"
+SELECT * FROM "pages"
+
+
+SELECT * FROM "pages"
+
+
+
+
+
+
+
+
+
+
+
+SELECT * FROM "types"
+SELECT * FROM "types" WHERE "token" = 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1aWQiOiIxIiwic2NvcGVzIjpbInVzZXIiXSwiZXhwIjoxNTgxOTczMDkyfQ.Kk8pTIywRm-65oP-p0Ev8kJ5BV3S26gt8YRiZDfeRyY'
+SELECT * FROM "users" WHERE "email" = 'jellehak@gmail.com' AND "password" = '123' LIMIT 1
+SELECT * FROM "types"
+SELECT * FROM "types" WHERE "name" = 'orders'
+SELECT * FROM "orders"
+SELECT * FROM "types" WHERE "name" = 'themes'
+
+SELECT * FROM "types" WHERE "name" = 'media'
+SELECT * FROM "media"
+SELECT * FROM "types" WHERE "name" = 'pages'
+SELECT * FROM "pages"
+SELECT * FROM "types" WHERE "name" = 'media'
+SELECT * FROM "media"
+SELECT * FROM "types" WHERE "name" = 'permissions'
+SELECT * FROM "permissions"
+SELECT * FROM "types" WHERE "name" = 'types'
+SELECT * FROM "types"
+SELECT * FROM "roles"
+SELECT * FROM "types"
+SELECT * FROM "types" WHERE "name" = 'types'
+SELECT * FROM "types"
+SELECT * FROM "types" WHERE "name" = 'menus'
+SELECT * FROM "menus"
+SELECT * FROM "types" WHERE "name" = 'news'
+SELECT * FROM "news"
+SELECT * FROM "types" WHERE "name" = 'permissions'
+SELECT * FROM "permissions"

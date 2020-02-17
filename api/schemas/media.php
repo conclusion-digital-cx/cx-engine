@@ -2,10 +2,8 @@
 
 return [
     'get' => function ($row) {
-        // Computed fields
-        $computed = [
+        return [
             'imageUrl' => "http://localhost:8666$row[image]"
         ];
-        return array_merge($row, $computed);
     }
 ];

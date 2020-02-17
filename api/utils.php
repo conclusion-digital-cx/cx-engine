@@ -1,20 +1,55 @@
 <?php
 
+function getJsonBody() {
+    $inputJSON = file_get_contents('php://input');
+    return json_decode($inputJSON); 
+}
 
-function globPath($path) {
-    // $path = "../layouts";
-    $files = glob("$path/*.*");
-    foreach ($files as &$value) {
-        // Remove path
-        $value = substr($value, strlen($path));
+function createTableStructureFromAttributes($attributes)
+{
+    // Convert to sqlite
+    $fields = [
+        // "id" => [
+        //     "INT",
+        //     "NOT NULL",
+        //     "AUTO_INCREMENT",
+        //     "PRIMARY KEY"
+        // ],
 
-        $value = (object) [
-            'name' => $value,
+        // For Sqlite
+        "id" => [
+            "INTEGER",
+            "NOT NULL",
+            "PRIMARY KEY",
+            "AUTOINCREMENT",
+            "UNIQUE",
+        ]
+    ];
+    foreach ($attributes as $key => $field) {
+        $key = $field['name'];
+        $type = $field['type']; // string, number, enum, relation, ...
+
+        /*
+sqlite: INTEGER, TEXT, BLOB, REAL, NUMERIC
+        */
+        $mapTypes = [
+            "string" => "TEXT",
+            "number" => "TEXT",
+            "enum" => "TEXT",
+            "date" => "REAL",
+            "relation" => "INTEGER",
+        ];
+
+        // TODO better typing
+        $fields[$key] = [
+            $mapTypes[$type] ?: "TEXT"
+            // "VARCHAR(30)",
+            // "NOT NULL"
         ];
     }
-    header("content-type:application/json");
-    echo json_encode($files);
-};
+    return $fields;
+}
+
 
 function rglob($pattern, $flags = 0)
 {
@@ -28,33 +63,14 @@ function rglob($pattern, $flags = 0)
 // ==================
 // Responses
 // ==================
-function processDocument($doc)
-{
-    $model = getModel('all');
-    $fn = $model->get;
-    return $fn($doc);
-}
-
 function jsonArrayResponse($data = [])
 {
-    if ($data) {
-        // print_r($data);
-
-        foreach ($data as &$row) {
-            $row = processDocument($row);
-        }
-    }
-
     header("content-type:application/json");
     echo json_encode($data);
 }
 
 function jsonResponse($data = [])
 {
-    if ($data) {
-        $data = processDocument($data);
-    }
-
     header("content-type:application/json");
     echo json_encode($data);
 }
@@ -64,13 +80,8 @@ function notFoundResponse($t = "Not found")
     global $config;
     global $db;
 
-    header($_SERVER["SERVER_PROTOCOL"] . ' 404 Not Found');
+    http_response_code(404);
     echo "Not found\n";
-    // if ($config->debug) {
-    //     echo "\n";
-    //     echo $t;
-    //     echo $db->last();
-    // }
 }
 
 function getModel($name)

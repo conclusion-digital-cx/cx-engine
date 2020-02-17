@@ -1,6 +1,7 @@
 <?php
 
 return (object)[
+    'tokenSecret' => 'veryVerySecret',
     'root' => __DIR__,
     'baseUrl' => 'http://localhost:8666',   // used for uploads, etc.
     'apiKeys' => [

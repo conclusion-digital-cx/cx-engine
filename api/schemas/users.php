@@ -3,12 +3,12 @@
 return [
     'get' => function ($row) {
         return [
-            'attributes' => json_decode($row['attributes'])
+            'password' => password_hash($row['password'],PASSWORD_BCRYPT)
         ];
     },
     'save' => function ($row) {
         return [
-            'attributes' => json_encode($row['attributes'])
+            'password' => password_hash($row['password'],PASSWORD_BCRYPT)
         ];
     },
 ];
