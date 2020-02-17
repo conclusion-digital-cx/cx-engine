@@ -1,12 +1,12 @@
 
 {/* <style>
-.dropzone {
+.Dropzone {
   min-width:100px;
   min-height:100px;
   border: 5px dashed black;
   padding:10px;
 }
-.dropzone__over {
+.Dropzone__over {
   border: 5px dashed green;
 }
 </style> */}
@@ -80,8 +80,8 @@ export default {
     }
   },
   template: `  <div
-  class="dropzone"
-  :class="over ? 'dropzone__over': ''"
+  class="Dropzone"
+  :class="over ? 'Dropzone__over': ''"
   @drop.stop.prevent="onDrop"
   @dragover.stop.prevent="onDragover"
   @dragenter.stop.prevent="onDragenter"

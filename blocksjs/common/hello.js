@@ -1,16 +1,13 @@
 const html = (strings) => strings[0]
 
 export default {
-    name: 'phuc',
+    name: 'hello',
 
     data() {
         return {
         }
     },
-    async created() {
-        // const items = await fetch(`/api/menus`).then(elem => elem.json())
-        // this.items = items
-    },
+
     methods: {
         onEnter() {
             this.$emit('done', this.$refs.content)
@@ -19,7 +16,7 @@ export default {
 
     template: html`
     <div ref="content">
-       Phuc
+       Hello
     </div>
     `
 }

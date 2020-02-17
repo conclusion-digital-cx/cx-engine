@@ -1,8 +1,11 @@
 # Intro
-Cx Engine is an online page editor combined with a headless restfull API written in PHP.
+Cx Engine is lightweight, modular and fast headless CMS based on PHP and Vue.
 
 # Roadmap
-- [ ] [api] Add roles and protect with JWT tokens
+- [ ] [api] Schema based policies
+- [ ] [api] Add roles / policies
+- [ ] [api] add JWT tokens support
+- [ ] support nature === 'manyToOne'
 - [ ] [admin] Plugin management
 - [ ] [blocks] Add example blocks to connect with prismic
 
@@ -14,10 +17,10 @@ Cx Engine is an online page editor combined with a headless restfull API written
 
 # Development
 Run `npm start` to spin up a PHP development server. 
-This will start a new development server at http://localhost:8666/. This readme will use futher use this host to show examples.
+This will start a new development server at http://localhost:8666/. ( This readme will use this host in examples. )
 
 # Headless API
-It comes out of the box with a light Restfull API that supports all SQL databases (including MySQL, MSSQL, SQLite, MariaDB, PostgreSQL, Sybase, Oracle and more). This let's you quickly scaffold a project.
+The headless API is a light Restfull API that supports all SQL databases (including MySQL, MSSQL, SQLite, MariaDB, PostgreSQL, Sybase, Oracle and more). Get quickly started with sqlite and later in production switch to more preformant databases if needed.
 
 # API Endpoints
 - POST /upload
@@ -33,15 +36,40 @@ It comes out of the box with a light Restfull API that supports all SQL database
 - GET http://localhost:8666/api/blocks
 - GET http://localhost:8666/api/blocksjs
 
+
+# Your first website
+To make CxEngine speedy, a webpage should be generated lean. In other words nothing should happen if it is not needed. This makes CxEngine very speedy. A webpage is generated in the following fashion: 
+1. match the request to a `page`
+2. match the `page` to a `theme` or use the default `theme`
+3. set the `regions['main']` with page content
+4. include the `theme`
+5. render the required regions
+
+regions can consist of 3 types: closure, object (block) or a string.
+```php
+// Closure
+$regions['main'][] = function () {
+    echo "hello world";
+};
+
+// Block
+$regions['main'][] => [
+    $blocks['hello']
+]
+
+// String
+$regions['main'][] = "hello world";
+```
+
 # Theming
-To create a theme, just create a new folder inside `/themes`. And create an `index.php` file. This file will be used to generate the main layout. Inside this file you will have to define `zones`. The following zones are mandatory for a proper working and good integration with plugins.
+To create a theme, just create a new folder inside `/themes`. And create an `index.php` file. This file will be used to generate the main layout. Inside this file you will have to define `regions`. The following regions are more or less mandatory for a proper working and good integration with plugins.
 ```php
     'head' => [],
     'afterbody' => [],
     'content' => [],
     'menu' => [],
     'main' => [],
-    'footer' => []
+    'footer' => []-
 ```
 
 # Website
@@ -58,12 +86,10 @@ There are two ways of creating blocks. Server side (PHP) or client side (Vue / J
 
 Client side blocks can be found in `/blocksjs`. You can create your own blocks inside this folder. 
 
+## Your first plugin
+A plugin is the way to add extra functionality to CxEngine. A plugin is being included through the `register.php` file in the root. Here you should register your `blocks` and map them to the `regions`.
+
 ## Your first block
 ...
-
-
-## Your 
-
-
 
 

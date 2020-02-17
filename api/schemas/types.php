@@ -1,0 +1,15 @@
+<?php
+
+return [
+    'get' => function ($row) {
+        // Computed fields
+        return [
+            'attributes' => json_decode($row['attributes'])
+        ];
+    },
+    'save' => function ($row) {
+        return [
+            'attributes' => json_encode($row['attributes'])
+        ];
+    },
+];

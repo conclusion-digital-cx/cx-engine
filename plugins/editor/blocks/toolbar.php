@@ -13,7 +13,7 @@
     <?php } else {
         $url = strtok($_SERVER["REQUEST_URI"], '?');
     ?>
-        <a href='/admin/#/pages/new?url=<?= $url ?>'>Create page</a>
+        <a target="_blank" href='/admin/#/pages/new?url=<?= $url ?>'>Create page</a>
     <?php }  ?>
 
 </div>

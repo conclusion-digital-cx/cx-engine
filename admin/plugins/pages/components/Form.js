@@ -67,15 +67,21 @@ export default {
 
   template: html`
   <v-form ref="form" @submit.prevent="validate(form)">
-    <!-- {{form}} -->
-    <!-- {{value}} -->
-      <!-- <v-text-field v-model='value.file' type="file" label="Load from a file" />
-      - or - -->
-      <v-text-field v-model="form.title" label="Page title" placeholder="e.g. Homepage" />
-      <v-text-field v-model="form.url" label="Url" placeholder="e.g. /about/us" />
+  <v-row>
+            <v-col cols="8">
+                <div v-html="form.body" @blur="form.body = $event.target.innerHTML" contenteditable>loading...</div>
+            </v-col>
+            <v-col>
+              <v-text-field v-model="form.title" label="Page title" placeholder="e.g. Homepage" />
+              <v-text-field v-model="form.url" label="Url" placeholder="e.g. /about/us" />
+              <v-textarea v-model="form.body" label="Page content" />
+              <!-- <v-textarea v-model="form.blocks" label="Blocks" /> -->
+              {{form.blocks}}
 
-      <v-textarea v-model="form.body" label="Page content" />
+            </v-col>
+        </v-row>
 
+    
       <v-row>
         <v-btn
           :loading="loading"

@@ -4,7 +4,8 @@
   "description": "A simple PHP based CMS",
   "main": "index.js",
   "scripts": {
-    "start": "php -S localhost:8666"
+    "start": "php -S localhost:8666",
+    "dev": "browser-sync start --port 5000 --proxy 'localhost:8666' --files './'"
   },
   "keywords": [],
   "author": "",

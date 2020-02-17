@@ -59,6 +59,8 @@ export default {
         <Form 
         v-bind="$props" 
         @success="success"/>
+
+ 
         </v-card-text>
     </v-card>
     </div>

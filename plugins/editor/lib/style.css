@@ -1,4 +1,9 @@
 @import "grid.css";
+/* @import "v-btn.css"; */
+
+.v-application--wrap {
+    min-height: initial;
+}
 
 .block {
     /* background: rgba(85, 72, 72, 0.22); */
@@ -21,7 +26,8 @@
 }
 
 .block .block__heading {
-    visibility: hidden
+    visibility: hidden;
+    z-index: 1000000;
 }
 
 .block:hover .block__heading {
@@ -31,4 +37,5 @@
 .block .actions {
     position: absolute;
     right:0;
+    z-index: 10;
 }

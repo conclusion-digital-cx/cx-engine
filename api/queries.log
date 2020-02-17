@@ -1,13 +1,189 @@
 
-UPDATE "pages" SET "id" = '6', "title" = NULL, "url" = '/oplossingen/boilers/', "body" = '', "blocks" = 'a:2:{i:0;a:3:{s:4:"name";s:7:"heading";s:6:"render";s:0:"";s:5:"props";a:1:{s:5:"value";s:7:"Boilers";}}i:1;a:3:{s:4:"name";s:9:"paragraph";s:6:"render";s:0:"";s:5:"props";a:1:{s:5:"value";s:11:"Pretty cool";}}}', "cache" = NULL, "state" = NULL, "createdAt" = NULL WHERE "id" = '6'
-SELECT * FROM "pages" WHERE "id" = '6' LIMIT 1
-
-UPDATE "pages" SET "id" = '6', "title" = NULL, "url" = '/oplossingen/boilers/', "body" = '', "blocks" = 'a:1:{i:0;a:3:{s:4:"name";s:7:"heading";s:6:"render";s:0:"";s:5:"props";a:1:{s:5:"value";s:9:"efawefawe";}}}', "cache" = NULL, "state" = NULL, "createdAt" = NULL WHERE "id" = '6'
-SELECT * FROM "pages" WHERE "id" = '6' LIMIT 1
-
-SELECT * FROM "pages" WHERE "id" = '6' LIMIT 1
-
-SELECT * FROM "pages" WHERE "state" IS NULL
-SELECT * FROM "pages" WHERE "id" = '6' LIMIT 1
-SELECT * FROM "pages" WHERE "state" IS NULL
-SELECT * FROM "pages" WHERE "id" = '6' LIMIT 1
+SELECT * FROM "types" WHERE "name" = 'permissions' LIMIT 1
+CREATE TABLE IF NOT EXISTS account (id INTEGER UNIQUE AUTOINCREMENT PRIMARY KEY, role TEXT, type TEXT)
+SELECT * FROM "types" WHERE "name" = 'permissions' LIMIT 1
+CREATE TABLE IF NOT EXISTS account (id INTEGER UNIQUE AUTOINCREMENT PRIMARY KEY, role TEXT, type TEXT)
+SELECT * FROM "types" WHERE "name" = 'permissions' LIMIT 1
+CREATE TABLE IF NOT EXISTS account (id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE, role TEXT, type TEXT)
+SELECT * FROM "types" WHERE "name" = 'permissions' LIMIT 1
+CREATE TABLE IF NOT EXISTS account (id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE, role TEXT, type TEXT)
+SELECT * FROM "types" WHERE "name" = 'permissions' LIMIT 1
+SELECT * FROM "types" WHERE "name" = 'permissions' LIMIT 1
+SELECT * FROM "types" WHERE "name" = 'permissions' LIMIT 1
+CREATE TABLE IF NOT EXISTS account (id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE, role INTEGER, type INTEGER)
+SELECT * FROM "types" WHERE "name" = 'permissions' LIMIT 1
+CREATE TABLE IF NOT EXISTS account (id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE, role INTEGER, type INTEGER)
+SELECT * FROM "types" WHERE "name" = 'permissions' LIMIT 1
+CREATE TABLE IF NOT EXISTS permissions (id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE, role INTEGER, type INTEGER)
+SELECT * FROM "types" WHERE "name" = 'permissions' LIMIT 1
+CREATE TABLE IF NOT EXISTS permissions (id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE, role INTEGER, type INTEGER)
+DROP TABLE IF EXISTS permissions
+SELECT * FROM "types" WHERE "name" = 'permissions' LIMIT 1
+CREATE TABLE IF NOT EXISTS permissions (id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE, role INTEGER, type INTEGER)
+SELECT * FROM "roles"
+SELECT * FROM "types"
+SELECT * FROM "roles"
+SELECT * FROM "roles" WHERE "name" = 'admin'
+SELECT * FROM "roles"
+SELECT * FROM "types"
+SELECT * FROM "types" WHERE "name" = 'users'
+SELECT * FROM "types"
+UPDATE "types" SET "attributes" = '[{"name":"id","editable":true,"type":"string"},{"name":"username","editable":true,"type":"string"},{"name":"email","editable":true,"type":"string"},{"name":"password","editable":true,"type":"string"},{"name":"role","editable":true,"type":"relation","params":{"target":"roles","nature":"oneToOne","targetColumnName":"name"}}]' WHERE "id" = '7'
+DROP TABLE IF EXISTS users
+SELECT * FROM "types" WHERE "name" = 'users' LIMIT 1
+CREATE TABLE IF NOT EXISTS users (id TEXT, username TEXT, email TEXT, password TEXT, role INTEGER)
+SELECT * FROM "types"
+SELECT * FROM "types" WHERE "name" = 'users'
+SELECT * FROM "types"
+SELECT * FROM "types" WHERE "name" = 'users'
+SELECT * FROM "users"
+SELECT * FROM "types" WHERE "name" = 'users'
+INSERT INTO "users" ("username", "email", "password") VALUES ('jellehak@gmail.com', 'jellehak@gmail.com', '123')
+SELECT * FROM "types" WHERE "name" = 'users'
+SELECT * FROM "users"
+SELECT * FROM "types" WHERE "name" = 'users'
+SELECT * FROM "types" WHERE "name" = 'users'
+SELECT * FROM "users"
+SELECT * FROM "types"
+SELECT * FROM "types" WHERE "name" = 'users'
+SELECT * FROM "users"
+SELECT * FROM "types" WHERE "name" = 'users'
+SELECT * FROM "types" WHERE "name" = 'users'
+SELECT * FROM "users"
+SELECT * FROM "types" WHERE "name" = 'users'
+SELECT * FROM "users"
+SELECT * FROM "types" WHERE "name" = 'users'
+SELECT * FROM "users"
+SELECT * FROM "types" WHERE "name" = 'users'
+SELECT * FROM "types" WHERE "name" = 'users'
+SELECT * FROM "users"
+SELECT * FROM "users"
+SELECT * FROM "types" WHERE "name" = 'users'
+SELECT * FROM "users"
+SELECT * FROM "types" WHERE "name" = 'users'
+SELECT * FROM "users" WHERE "id" = '1' LIMIT 1
+SELECT * FROM "types" WHERE "name" = 'users'
+SELECT * FROM "users"
+SELECT * FROM "types" WHERE "name" = 'users'
+SELECT * FROM "users" WHERE "id" = '1' LIMIT 1
+SELECT * FROM "types"
+SELECT * FROM "types" WHERE "name" = 'users'
+SELECT * FROM "users"
+SELECT * FROM "types" WHERE "name" = 'users'
+SELECT * FROM "users" WHERE "id" = '1' LIMIT 1
+SELECT * FROM "types" WHERE "name" = 'users'
+SELECT * FROM "users"
+SELECT * FROM "types" WHERE "name" = 'users'
+SELECT * FROM "users" WHERE "id" = '1' LIMIT 1
+SELECT * FROM "roles"
+UPDATE "users" SET "id" = '1', "username" = 'jellehak@gmail.com', "email" = 'jellehak@gmail.com', "password" = '123', "role" = '3' WHERE "id" = '1'
+SELECT * FROM "types" WHERE "name" = 'users'
+SELECT * FROM "users"
+SELECT * FROM "roles"
+SELECT * FROM "types"
+SELECT * FROM "types" WHERE "name" = 'users'
+SELECT * FROM "types"
+UPDATE "types" SET "attributes" = '[{"name":"id","editable":true,"type":"string"},{"name":"username","editable":true,"type":"string"},{"name":"email","editable":true,"type":"string"},{"name":"password","editable":true,"type":"string"},{"name":"role","editable":true,"type":"relation","params":{"target":"roles","nature":"manyToOne","targetColumnName":"name"}}]' WHERE "id" = '7'
+UPDATE "types" SET "attributes" = '[{"name":"id","editable":true,"type":"string"},{"name":"username","editable":true,"type":"string"},{"name":"email","editable":true,"type":"string"},{"name":"password","editable":true,"type":"string"},{"name":"role","editable":true,"type":"relation","params":{"target":"roles","nature":"manyToOne","targetColumnName":"name"}}]' WHERE "id" = '7'
+SELECT * FROM "types" WHERE "name" = 'users'
+SELECT * FROM "users"
+SELECT * FROM "types" WHERE "name" = 'users'
+SELECT * FROM "roles"
+SELECT * FROM "users" WHERE "id" = '1' LIMIT 1
+SELECT * FROM "types" WHERE "name" = 'users'
+SELECT * FROM "users"
+SELECT * FROM "types" WHERE "name" = 'users'
+SELECT * FROM "roles"
+SELECT * FROM "users" WHERE "id" = '1' LIMIT 1
+SELECT * FROM "types" WHERE "name" = 'users'
+SELECT * FROM "users"
+SELECT * FROM "types" WHERE "name" = 'users'
+SELECT * FROM "users"
+SELECT * FROM "types" WHERE "name" = 'users'
+SELECT * FROM "roles"
+SELECT * FROM "users" WHERE "id" = '1' LIMIT 1
+SELECT * FROM "roles"
+SELECT * FROM "types" WHERE "name" = 'users'
+SELECT * FROM "users"
+SELECT * FROM "types" WHERE "name" = 'users'
+SELECT * FROM "roles"
+SELECT * FROM "users" WHERE "id" = '1' LIMIT 1
+SELECT * FROM "types" WHERE "name" = 'users'
+SELECT * FROM "users"
+SELECT * FROM "types" WHERE "name" = 'users'
+SELECT * FROM "roles"
+SELECT * FROM "users" WHERE "id" = '1' LIMIT 1
+SELECT * FROM "types" WHERE "name" = 'users'
+SELECT * FROM "users"
+SELECT * FROM "roles"
+SELECT * FROM "types"
+SELECT * FROM "types" WHERE "name" = 'types'
+SELECT * FROM "types"
+SELECT * FROM "types" WHERE "name" = 'orders'
+SELECT * FROM "types"
+SELECT * FROM "types" WHERE "name" = 'users'
+SELECT * FROM "types"
+UPDATE "types" SET "attributes" = '[{"name":"id","editable":true,"type":"string"},{"name":"username","editable":true,"type":"string"},{"name":"email","editable":true,"type":"string"},{"name":"password","editable":true,"type":"string"},{"name":"role","editable":true,"type":"relation","params":{"target":"roles","nature":"oneToOne","targetColumnName":"name"}}]' WHERE "id" = '7'
+SELECT * FROM "types" WHERE "name" = 'users'
+SELECT * FROM "types"
+SELECT * FROM "types" WHERE "name" = 'users'
+SELECT * FROM "types"
+SELECT * FROM "types" WHERE "name" = 'users'
+SELECT * FROM "types"
+SELECT * FROM "types"
+SELECT * FROM "types" WHERE "name" = 'users'
+SELECT * FROM "types"
+SELECT * FROM "types" WHERE "name" = 'users'
+SELECT * FROM "types"
+SELECT * FROM "types" WHERE "name" = 'users'
+SELECT * FROM "types"
+SELECT * FROM "types" WHERE "name" = 'users'
+SELECT * FROM "types"
+SELECT * FROM "types" WHERE "name" = 'users'
+SELECT * FROM "types"
+SELECT * FROM "types"
+SELECT * FROM "types"
+SELECT * FROM "types" WHERE "name" = 'users'
+SELECT * FROM "types"
+UPDATE "types" SET "attributes" = '[{"name":"id","editable":true,"type":"string"},{"name":"username","editable":true,"type":"string"},{"name":"email","editable":true,"type":"string"},{"name":"password","editable":true,"type":"string"},{"name":"role","editable":true,"type":"relation","params":{"target":"roles","nature":"oneToOne","targetColumnName":"name"},"target":"roles","nature":"oneToOne","targetColumnName":"name"}]' WHERE "id" = '7'
+SELECT * FROM "types"
+SELECT * FROM "types" WHERE "name" = 'users'
+SELECT * FROM "types"
+SELECT * FROM "types"
+SELECT * FROM "types"
+SELECT * FROM "types"
+SELECT * FROM "types" WHERE "name" = 'users'
+SELECT * FROM "types"
+SELECT * FROM "types"
+SELECT * FROM "types" WHERE "name" = 'users'
+SELECT * FROM "types"
+SELECT * FROM "types" WHERE "name" = 'users'
+SELECT * FROM "types"
+UPDATE "types" SET "attributes" = '[{"name":"id","editable":true,"type":"string"},{"name":"username","editable":true,"type":"string"},{"name":"email","editable":true,"type":"string"},{"name":"password","editable":true,"type":"password"},{"name":"role","editable":true,"type":"relation","params":{"target":"roles","nature":"oneToOne","targetColumnName":"name"},"target":"roles","nature":"oneToOne","targetColumnName":"name"}]' WHERE "id" = '7'
+SELECT * FROM "types" WHERE "name" = 'users'
+SELECT * FROM "users"
+SELECT * FROM "types" WHERE "name" = 'users'
+SELECT * FROM "roles"
+SELECT * FROM "users" WHERE "id" = '1' LIMIT 1
+SELECT * FROM "types" WHERE "name" = 'users'
+SELECT * FROM "users"
+SELECT * FROM "types" WHERE "name" = 'users'
+SELECT * FROM "roles"
+SELECT * FROM "users" WHERE "id" = '1' LIMIT 1
+SELECT * FROM "types" WHERE "name" = 'users'
+SELECT * FROM "users"
+SELECT * FROM "types"
+SELECT * FROM "types" WHERE "name" = 'users'
+SELECT * FROM "users"
+SELECT * FROM "types"
+SELECT * FROM "roles"
+SELECT * FROM "roles" WHERE "name" = 'public'
+SELECT * FROM "roles" WHERE "name" = 'public'
+SELECT * FROM "roles" WHERE "name" = 'public'
+SELECT * FROM "roles" WHERE "name" = 'public'
+SELECT * FROM "users" WHERE "role" = '1'
+SELECT * FROM "roles" WHERE "name" = 'public'
+SELECT * FROM "users" WHERE "role" = '1'
+SELECT * FROM "roles"
+SELECT * FROM "roles" WHERE "name" = 'admin'
+SELECT * FROM "users" WHERE "role" = '3'

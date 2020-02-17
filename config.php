@@ -1,7 +1,17 @@
 <?php
 
 return (object)[
-    'theme' => 'inventum',
+    'root' => __DIR__,
+    'baseUrl' => 'http://localhost:8666',   // used for uploads, etc.
+    'apiKeys' => [
+        'veryVeryVeryVerySecret'
+    ],
+    'autoload' => [
+        // 'editor',
+        'contenttools'
+    ],
+    'theme' => '2020',
+    // 'theme' => 'inventum',
     'debug' => true,
     'uploaddir' => __DIR__."/uploads", 
     'db' => [

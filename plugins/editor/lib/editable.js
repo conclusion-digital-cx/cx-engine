@@ -1,6 +1,6 @@
 import "./Grid.js"
 
-// IMPROVE
+// IMPROVE - make functional
 Array.prototype.move || Object.defineProperty(Array.prototype, "move", {
   value: function (index, howMany, toIndex) {
     var

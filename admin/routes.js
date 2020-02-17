@@ -17,7 +17,6 @@ export default [
     ...collections,
     ...media,
     ...settings,
-
     { path: '/users', component: Collections_name, props: (route) => ({ name: "users" }) },
 
     {
@@ -28,5 +27,11 @@ export default [
     },
 
     // Work in progress
-    ...sitemap
+    ...sitemap,
+    {
+        path: "*", 
+        component: {
+            template: `<h1>Page not found</h1>`
+        }
+    }
 ]

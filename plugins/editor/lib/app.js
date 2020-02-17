@@ -1,24 +1,15 @@
 import "./Grid.js"
 import editable from './editable.js'
 
-// Get blocks
-// import paragraph from './blocks/paragraph.js'
-// import list from './blocks/list.js'
-// const blocksJs = {
-//   paragraph,
-//   list
-// }
-
 // Register globally
 Vue.component('editable', editable)
-
 
 const html = (strings) => strings[0]
 
 // ==============
 // Get globals
 // ==============
-console.log(window.settings)
+// console.log(window.settings)
 // TODO ?
 // BE AWARE GLOBAL !!
 const getPageId = () => {
@@ -27,7 +18,6 @@ const getPageId = () => {
 
 const app = {
   components: {
-    // ...blocksJs
     editable
   },
 
@@ -65,44 +55,18 @@ const app = {
     let resp
     resp = await fetch(`/api/pages/${id}`)
     this.page = await resp.json()
-    // this.blocks = JSON.parse(this.page.blocks) || []
 
     // Initial (from server pageId ?)
     this.blocks = [
       ...this.page.blocks || []
-      // { component: 'paragraph', name: 'paragraph' }
     ]
 
-    // =====
-    // PHP Blocks
-    // resp = await fetch('/api/blocks')
-    // this.components = await resp.json()
-
-    // =====
-    // Dynamicly load JS components
-    // TODO get from api
-    // const respjs = await loadJS('/blocks/heading.js');
-    // console.log(respjs)
-    // const components = [
-    //   '/blocksjs/paragraph.js',
-    //   '/blocksjs/heading.js',
-    //   '/blocksjs/picture.js',
-    //   '/blocksjs/list.js',
-    //   '/blocksjs/repeater.js',
-    //   // '/blocksjs/columns.js',
-    //   // DEV
-    //   '/blocksjs/columnsdual.js',
-    //   '/blocksjs/paragraphdual.js',
-    // ]
-
+    // Dynamicly load blocks
     const components = await fetch(`/api/blocksjs`).then(elem => elem.json())
-
     components.forEach(component => {
       import(component)
         .then((module) => {
-          // console.log(module.default)
           this.components.push(module.default)
-          // console.log(this.components)
         });
     })
   },
@@ -154,6 +118,11 @@ const app = {
 <div class="d-flex">
 <!-- <v-switch class="mr-5" label="editor" v-model='form.editor'></v-switch> -->
 <v-switch label="preview" v-model='form.preview'></v-switch>
+<v-switch label="code" v-model='form.code'></v-switch>
+
+<div v-if="form.code">
+{{blocks}}
+</div>
 
 <v-btn
 @click="save(page)"
@@ -177,14 +146,6 @@ class="ma-4"
             </v-btn> -->
 </div>
 
-
-<!-- <div>
-{{blocks}}
-</div> -->
-<!-- <div>
-Total {{blocks.length}} blocks
-</div> -->
-
     <v-snackbar
       v-model="snackbar"
       :timeout="1000"
@@ -199,7 +160,11 @@ Total {{blocks.length}} blocks
       </v-btn>
     </v-snackbar>
 
-    <editable :preview="form.preview" :components="components" v-model="blocks" @input="onInput"/>
+    <editable 
+      :preview="form.preview" 
+      :components="components" 
+      v-model="blocks" 
+      @input="onInput"/>
     </v-content>
 
   </v-app>

@@ -3,37 +3,24 @@
 
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title><?=$page->title?></title>
-    <?=$page->head?>
-    <script>
-        window.settings = {
-            pageId:<?=$page->id?>
-        }
-    </script>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <title><?php region('title') ?></title>
+   
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <?php region('head') ?>
 </head>
 
 <body>
-    <?php // block('nav'); ?>
-       <!-- Editor TODO admin only-->
-    <div style="z-index:10;position:absolute;right:0;padding:5px; background: #ddd; display:flex;">
-        <?php if(isset($_GET['editor'])) { ?>
-            <a style="padding:0 5px 0 5px" href="<?=str_replace("?editor","",$_SERVER['REQUEST_URI'])?>">Disable editor</a>
-        <?php } else { ?>
-            <a style="padding:0 5px 0 5px" href="?editor">Enable editor</a>
-        <?php } ?>
-        <a style="padding:0 5px 0 5px" href="/admin">Backend</a>
-        <!-- <a style="padding:0 5px 0 5px" href="/control/">Backend (new)</a> -->
-        <a style="padding:0 5px 0 5px" target="_blank" href="/api/pages/<?=$page->id?>">page#<?=$page->id?></a>
-        <!-- <div style="padding-left:10px;">page#<?=$page->id?></div> -->
+    <?php region('afterbody') ?>
+
+    <div class="container">
+        <?php region('main') ?>
     </div>
 
-    <div id='app' class="v-application--wrap">
-        <div class="container">
-            <?=$page->body?>
-        </div>
-    </div>
-
-    <?=$page->footer?>
+     <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <?php region('footer') ?>
 </body>
 </html>

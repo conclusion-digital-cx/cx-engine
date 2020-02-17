@@ -2,89 +2,66 @@
 // ============
 // App entry
 // ============
-include "lib/Cx.php";
+include("lib/Cx.php");
 $config = include("config.php");
 $cx = new Cx($config);
 
 // Get Page object
 $page = $cx->match();
+$regions = [
+    'title' => [],
+    'head' => [],
+    'afterbody' => [],
+    'content' => [],
+    'menu' => [],
+    'main' => [],
+    'footer' => []
+];
+
+// Process config->autoload
+foreach ($config->autoload as &$value) {
+    // $resp = include("plugins/$value/register.php");
+    $resp = include("plugins/$value/register.php");
+    debug($resp);
+    $regions = array_merge($regions, $resp);
+}
 
 // ============
 // Register blocks
 // ============
 $blocks = [];
 
-// Register blocks
-// $blocks['editor'] = (object) [
-//     'file' => "plugins/editor/blocks/editor.php",
-// ];
-// $blocks['widgets'] = (object) [
-//     'file' => "plugins/editor/blocks/widgets.php",
-// ];
-$blocks['editor'] = getBlocksFromPath("./plugins/editor/blocks");
-
-// addBlocksFromPath("./blocks");
+addBlocksFromPath("./blocks");
 addBlocksFromPath("./themes/$config->theme/blocks");
-debug($blocks, "Blocks");
+// debug($blocks, "Blocks");
 
 // ============
-// Define Zones
+// Fill regions
 // ============
-$zones = [
-    'head' => [
-    ],
-    'afterbody' => [
-        $blocks['editor']['toolbar']    // TODO only admins
-    ],
-    'content' => [
-        // 'header'
-    ],
-    'menu' => [
-        $blocks['menu']
-    ],
-    'main' => [
-        // $blocks['main'],
-    ],
-    'footer' => [
-    ]
-];
-debug($zones, "Zones");
-
-// Dynamicly Add editor
-if (isset($_GET['editor'])) {
-    $editorZones = [
-        'head' => [
-            $blocks['editor']['pageid'],
-            $blocks['editor']['head'],
-        ],
-        'afterbody' => [
-            $blocks['editor']['toolbar']
-        ],
-        'main' => [
-            $blocks['editor']['widgets']
-        ],
-        'footer' => [
-            $blocks['editor']['footer']
-        ]
-    ];
-    $zones = array_merge($zones, $editorZones);
-}
-    
+// $regions['main'][] = $blocks['menu'];
+// $regions['afterbody'][] = $blocks['editor']['toolbar'];    // TODO only admins
+// debug($regions, "regions");
 
 // ============
 // Render Page
 // ============
+$blocks['news'] = function() {
+    return render ("./blocks/news.php");
+};
 
 
-debug('Page');
-debug($page);
-if($page) {
-    $zones['main'][] = $page->body;
+if ($page) {
+    // $regions['main'][] = $page->body;
+    $regions['main'][] = renderTemplate($page->body, $blocks);
+
+    // TEST template system
+    // $renderTemplate = function () {
+    //     include "templates/home.php";
+    // };
+    // $regions['main'][] = $renderTemplate;
 } else {
-    $url = strtok($_SERVER["REQUEST_URI"],'?');
-    $zones['main'][] = "<h1>Page doesn't exist.</h1>";
+    $url = strtok($_SERVER["REQUEST_URI"], '?');
+    $regions['main'][] = "<h1>Page doesn't exist.</h1>";
 }
 
 include "themes/$config->theme/index.php";
-
-

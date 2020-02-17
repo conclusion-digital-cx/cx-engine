@@ -1,8 +1,8 @@
 <?php
 require_once "lib/Medoo.php";
-require_once "lib/AltoRouter.php";
+require_once "lib/Router.php";  // Fork of AltoRouter
 
-$router = new AltoRouter();
+$router = new Router();
 
 // include "../lib/Cx.php";
 $config = include("../config.php");
@@ -22,13 +22,36 @@ $db = new Medoo($config->db);
 
 $router->setBasePath('/api');
 
+// =========
 // CORS
-header("Access-Control-Allow-Origin: *");
+// =========
+// Access-Control headers are received during OPTIONS requests
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    header('Access-Control-Allow-Origin: *');
+    header('Access-Control-Allow-Methods: POST, GET, DELETE, PUT, PATCH, OPTIONS');
+    header('Access-Control-Allow-Headers: token, Content-Type');
+    header('Access-Control-Max-Age: 1728000');
+    header('Content-Length: 0');
+    header('Content-Type: text/plain');
+    die();
+}
+
+header('Access-Control-Allow-Origin: *');
+// header('Content-Type: application/json');
+
+// =========
+// REST API
+// =========
+$router->map('GET', '', function () {
+    echo "CxEngine REST API";
+    // print_r($_SERVER);
+});
+
 
 // ******
 // Image upload
 // ******
-$router->map('POST', '/upload', function () use ($db, $uploaddir) {
+$router->map('POST', '/upload', function () use ($config, $db, $uploaddir) {
     // print_r($_FILES);
     $fileToUpload = $_FILES["fileToUpload"];
 
@@ -87,16 +110,121 @@ $router->map('POST', '/upload', function () use ($db, $uploaddir) {
     header("content-type:application/json");
     $res = new StdClass;
     $res->message = $message;
-    $res->url = "http://localhost:8666/uploads/" . basename($fileToUpload["name"]);
+    $res->url = "$config->baseUrl/uploads/" . basename($fileToUpload["name"]);
     $res->debug = $fileToUpload;
     echo json_encode($res);
 });
 
-// =========
-// REST API
-// =========
-$router->map('GET', '', function () {
-    echo "CxEngine REST API";
+
+// ******
+// Table Management
+// ******
+function createTableStructureFromAttributes($attributes)
+{
+    // Convert to sqlite
+    $fields = [
+        // "id" => [
+        //     "INT",
+        //     "NOT NULL",
+        //     "AUTO_INCREMENT",
+        //     "PRIMARY KEY"
+        // ],
+
+        // For Sqlite
+        "id" => [
+            "INTEGER",
+            "NOT NULL",
+            "PRIMARY KEY",
+            "AUTOINCREMENT",
+            "UNIQUE",
+        ]
+    ];
+    foreach ($attributes as $key => $field) {
+        $key = $field['name'];
+        $type = $field['type']; // string, number, enum, relation, ...
+
+        /*
+sqlite: INTEGER, TEXT, BLOB, REAL, NUMERIC
+        */
+        $mapTypes = [
+            "string" => "TEXT",
+            "number" => "TEXT",
+            "enum" => "TEXT",
+            "date" => "REAL",
+            "relation" => "INTEGER",
+        ];
+
+        // TODO better typing
+        $fields[$key] = [
+            $mapTypes[$type] ?: "TEXT"
+            // "VARCHAR(30)",
+            // "NOT NULL"
+        ];
+    }
+    return $fields;
+}
+
+
+
+$router->map('GET', '/_tasks/test/[a:name]', function ($params) use ($db) {
+    $name = $params->name;
+
+    // Get schema from types table
+    $entity = 'types';
+    $fields = "*";
+    $result = $db->get($entity, $fields, ['name' => $name]);
+
+    // TODO use schemaJson as source ?
+    $attributes = json_decode($result['attributes'], TRUE);
+
+    $fields = createTableStructureFromAttributes($attributes);
+
+    $res = $fields; // $db->create("account", $fields);
+
+    // $res = $db->query($sql);
+    header("content-type:application/json");
+    echo json_encode($res);
+});
+
+$router->map('GET', '/_tasks/create/[a:name]', function ($params) use ($db) {
+    $name = $params->name;
+
+    // Get schema from types table
+    $entity = 'types';
+    $fields = "*";
+    $result = $db->get($entity, $fields, ['name' => $name]);
+
+    // TODO use schemaJson as source ?
+    $attributes = json_decode($result['attributes'], TRUE);
+
+    $fields = createTableStructureFromAttributes($attributes);
+
+    $res = $db->create($name, $fields);
+
+    // $res = $db->query($sql);
+    header("content-type:application/json");
+    echo json_encode($res);
+});
+
+$router->map('GET', '/_tasks/drop/[a:name]', function ($params) use ($db) {
+    $name = $params->name;
+
+    $db->drop($name);
+
+    header("content-type:application/json");
+    echo json_encode(array('message' => "table dropped"));
+});
+
+$router->map('GET', '/_tasks/exists/[a:name]', function ($params) use ($db) {
+    $name = $params->name;
+
+    $rows = $db->select($name, "*");
+    $exist = is_array($rows);
+    header("content-type:application/json");
+    echo json_encode(array(
+        'exists' => $exist,
+        'table' => $name
+    ));
 });
 
 // ******
@@ -110,23 +238,7 @@ $router->map('GET', '/blocks/[a:id]/render', function ($id) use ($db) {
 // =======
 $router->map('GET', '/layouts', function () use ($db) {
     $path = "../layouts";
-    $files = glob("$path/*.*");
-    foreach ($files as &$value) {
-        // Remove path
-        $value = substr($value, strlen($path));
-
-        // Render
-        // $render = file_get_contents("http://localhost:8666/$value");
-        $render = "";
-
-        $value = (object) [
-            'name' => $value,
-            'render' => $render,
-        ];
-    }
-
-    header("content-type:application/json");
-    echo json_encode($files);
+    globPath($path);
 });
 
 // Themes
@@ -175,171 +287,135 @@ $router->map('GET', '/blocks', function () use ($db) {
     echo json_encode($files);
 });
 
-// Blocks
+
+// rglob folder: /blocksjs
 $router->map('GET', '/blocksjs', function () use ($db) {
     $path = "../blocksjs/";
-    $files = glob("$path*.*");
+    $files = rglob("$path*.*");
     foreach ($files as &$value) {
         // Remove ../
         $value = substr($value, strlen('..'));
-        // $value = substr($value, strlen($path));
-        // $value = substr($value, 0, -3); // Extension
     }
 
     header("content-type:application/json");
     echo json_encode($files);
 });
 
-
-// GET /:entity/:id HACKY Special
-$router->map('GET', '/blocks/[i:id]', function ($id) use ($db) {
-    $entity = 'blocks';
-    $fields = "*";
-    $result = $db->get($entity, $fields, ['id' => $id]);
-
-    if ($result['blocks']) {
-        $result['blocks'] = json_decode($result['blocks']);
-    }
-
-    header("content-type:application/json");
-    $json = json_encode($result);
-    echo $json;
-});
-
-
-// PUT /:entity/:id HACKY Special
-$router->map('PUT', '/blocks/[i:id]', function ($entity, $id) use ($db) {
-    try {
-        $inputJSON = file_get_contents('php://input');
-        $body = json_decode($inputJSON, TRUE); //convert JSON into array
-
-        // HACKY Special
-        if ($body['blocks']) {
-            $body['blocks'] = json_encode($body['blocks']);
-        }
-
-        $result = $db->update($entity, $body, ['id' =>  $id]);
-        if (!$result) {
-            throw new Exception();
-        }
-
-        header("content-type:application/json");
-        $json = json_encode(array('message' => "saved"));
-        echo $json;
-    } catch (Throwable $t) {
-        notFoundResponse($t);
-    }
-});
-
-
-// ******************
-// Collections : SPECIAL / DEBUG / TEMP
-// ******************
-// Special: create table
-$router->map('GET', '/collections/[a:id]/create', function ($id) use ($db) {
-    // Get schema from collections
-    $entity = 'collections';
-    $fields = "*";
-    $result = $db->get($entity, $fields, ['id' => $id]);
-    $res = $db->query($result['schema']);
-    echo $res;
-});
-
-
-$router->map('GET', '/collections/[a:id]/createfromjson', function ($id) use ($db) {
-    $entity = 'collections';
-    $fields = "*";
-    $result = $db->get($entity, $fields, ['id' => $id]);
-
-    // TODO use schemaJson as source ?
-    $schema = json_decode($result['schemaJson'], TRUE);
-    // print_r($schema);
-
-    // Convert to sqlite
-    foreach ($schema as $key => $value) {
-        $fields[] = "\n    '$key' TEXT";
-    }
-
-    $sql = "
-CREATE TABLE '" . $result['name'] . "' (
-    'id'	INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE,
-    " . join(",", $fields) . "
-);";
-    echo $sql;
-
-    $res = $db->query($sql);
-    header("content-type:application/json");
-    echo json_encode($res);
-});
-
-// $router->map('GET', '/collections/[a:id]/exists', function ($id) use ($db) {
-//     $entity = 'collections';
-//     $fields = "*";
-//     $result = $db->get($entity, $fields, ['id' => $id]);
-//     $res = $db->tableExist($result['name']);
-//     header("content-type:application/json");
-//     echo json_encode($res);
-// });
-
-
-// ==================
-// Responses
-// ==================
-function jsonArrayResponse($data = [])
-{
-    if ($data) {
-        foreach ($data as &$value) {
-            // HACKY Special
-            // TODO replace all *Json
-            // print_r($value);
-            if (isset($value['schemaJson'])) {
-                $value['schemaJson'] = json_decode($value['schemaJson']);
-            }
-        }
-    }
-
-    header("content-type:application/json");
-    echo json_encode($data);
-}
-
-function notFoundResponse($t)
-{
-    global $config;
-    global $db;
-
-    header($_SERVER["SERVER_PROTOCOL"] . ' 404 Not Found');
-    echo "Not found\n";
-    if ($config->debug) {
-        echo "\n";
-        echo $t;
-        echo $db->last();
-    }
-}
-
 // ******************
 // Collections
 // ******************
 // GET /:entity
-$router->map('GET', '/[a:entity]', function ($entity) use ($db) {
+use Ahc\Jwt\JWT;
+
+require_once("./lib/jwt/ValidatesJWT.php");
+require_once("./lib/jwt/JWT.php");
+require_once("./utils.php");    // Responses
+
+// Instantiate with key, algo, maxAge and leeway.
+$jwt = new JWT('veryVerySecret');
+
+$token = $jwt->encode([
+    'uid'    => 1,
+    'aud'    => 'http://site.com',
+    'scopes' => ['user'],
+    'iss'    => 'http://api.mysite.com',
+]);
+
+$jwt->decode($token);
+
+// ===============
+// Middleware: Check token
+// ===============
+$checkToken = function ($params) use ($config) {
+
+    // $model = getModel($params->entity);
+    // print_r($model);
+
+    // if(!isset($_SERVER['HTTP_AUTHORIZATION'])) {
+    //     header($_SERVER["SERVER_PROTOCOL"] . ' 401');
+    //     exit("401 Not authorized");
+    // }
+
+    // $auth = $_SERVER['HTTP_AUTHORIZATION'];
+    // $validApiKeys = $config->apiKeys;
+    // list($type, $token) = explode(" ", $auth);
+
+    // if($type === "apiKey") {
+    //     if (in_array($token, $validApiKeys)) {
+    //         // Proceed
+    //         return true;
+    //     } else {
+    //         header($_SERVER["SERVER_PROTOCOL"] . ' 401');
+    //         exit("401 Not authorized");
+    //     }
+    // } else if($type === "Bearer") {
+    //     header($_SERVER["SERVER_PROTOCOL"] . ' 401');
+    //     exit("Bearer login is currently not supported");
+    // }
+
+    return true;
+};
+
+$router->map('GET', '/[a:entity]', $checkToken);
+
+$router->map('GET', '/[a:entity]', function ($params) use ($db) {
+    $entity = $params->entity;
+
+    // Move to https://github.com/typicode/json-server
+    $functionFields = [
+        'page', 'itemsPerPage', 'sortBy', 'sortDesc',
+        'groupBy', 'groupDesc', 'mustSort', 'multiSort'
+    ];
+
     try {
         $fields = isset($_GET['fields']) ? $_GET['fields'] : '*';
-        // Convert NULL
         $where = $_GET;
+        $where = array_diff_key($where, array_flip($functionFields));
+
         // Process where
         foreach ($where as &$value) {
+            // Convert NULL
             $value = $value === 'NULL' ? null : $value;
         }
-        // $where['state'] = null;
-        
-        $data = $db->select($entity, $fields, $where);
-        jsonArrayResponse($data);
+
+        // TODO
+        // Set skips, limits, sorts
+        // page=1&itemsPerPage=10&sortBy=&sortDesc=&groupBy=&groupDesc=&mustSort=false&multiSort=false
+        // $where['LIMIT'] = [$_GET['page'] * $_GET['itemsPerPage'], $_GET['itemsPerPage']];
+
+        $rows = $db->select($entity, $fields, $where);
+        if (!is_array($rows)) {
+            return true;    // Table not exist...exit this route handler
+        }
+
+        // Process model
+        $model = getModel($entity);
+        $fn = $model->get;
+        // Call get on each row
+        foreach ($rows as &$row) {
+            $resp = $fn($row);
+            // print_r($resp);
+            // Merge
+            $row = array_merge($row, $resp);
+        }
+
+        jsonArrayResponse($rows);
     } catch (Throwable $t) {
         notFoundResponse($t);
     }
 });
 
+$router->map('GET', '/[a:entity]', function ($params) use ($db) {
+    notFoundResponse();
+});
+
+
 // POST /:entity
-$router->map('POST', '/[a:entity]', function ($entity) use ($db) {
+$router->map('POST', '/[a:entity]', $checkToken);
+
+$router->map('POST', '/[a:entity]', function ($params) use ($db) {
+    $entity = $params->entity;
+
     try {
         $inputJSON = file_get_contents('php://input');
         $body = json_decode($inputJSON, TRUE); //convert JSON into array
@@ -357,50 +433,51 @@ $router->map('POST', '/[a:entity]', function ($entity) use ($db) {
 });
 
 // GET /:entity/:id
-$router->map('GET', '/[a:entity]/[i:id]', function ($entity, $id) use ($db) {
+$router->map('GET', '/[a:entity]/[i:id]', $checkToken);
+
+$router->map('GET', '/[a:entity]/[i:id]', function ($params) use ($db) {
+    //    print_r((array)$params);
+    // list($entity, $id) = (array)$params;
+    $entity = $params->entity;
+    $id = $params->id;
 
     $fields = isset($_GET['fields']) ? $_GET['fields'] : '*';
     $result = $db->get($entity, $fields, ['id' => $id]);
 
-    header("content-type:application/json");
-    $json = json_encode($result);
-    echo $json;
+    jsonResponse($result);
 });
 
 // PUT /:entity/:id ( replace all fields )
-$router->map('PUT', '/[a:entity]/[i:id]', function ($entity, $id) use ($db) {
-    try {
-        $inputJSON = file_get_contents('php://input');
-        $body = json_decode($inputJSON, TRUE); //convert JSON into array
-
-        $result = $db->update($entity, $body, ['id' =>  $id]);
-        if (!$result) {
-            throw new Exception();
-        }
-
-        header("content-type:application/json");
-        $json = json_encode(array('message' => "saved"));
-        echo $json;
-    } catch (Throwable $t) {
-        notFoundResponse($t);
-    }
-});
-
-
+// TODO
+// $router->map('PUT', '/[a:entity]/[i:id]', function ($entity, $id) use ($db) {
+//     
+// });
 
 // PATCH /:entity/:id ( update only fields provided )
-$router->map('PATCH', '/[a:entity]/[i:id]', function ($entity, $id) use ($db) {
+// $router->map('PATCH', '/[a:entity]/[i:id]', $checkToken );
+
+$router->map('PATCH', '/[a:entity]/[i:id]', function ($params) use ($db) {
+    $entity = $params->entity;
+    $id = $params->id;
+
     try {
         $inputJSON = file_get_contents('php://input');
         $body = json_decode($inputJSON, TRUE); //convert JSON into array
 
+        // Process model
+        $model = getModel($entity);
+        $fn = $model->save;
+        $body = $fn($body);
+        // print_r($body);
+
         $result = $db->update($entity, $body, ['id' =>  $id]);
         if (!$result) {
-            throw new Exception();
+            throw new Exception("Not found");
         }
 
         header("content-type:application/json");
-        $json = json_encode(array('message' => "saved"));
+        $json = json_encode($body);
+        // $json = json_encode(array('message' => "saved"));
         echo $json;
     } catch (Throwable $t) {
         notFoundResponse($t);
@@ -409,7 +486,11 @@ $router->map('PATCH', '/[a:entity]/[i:id]', function ($entity, $id) use ($db) {
 
 
 // DELETE /:entity/:id
-$router->map('DELETE', '/[a:entity]/[i:id]', function ($entity, $id) use ($db) {
+$router->map('DELETE', '/[a:entity]/[i:id]', $checkToken);
+
+$router->map('DELETE', '/[a:entity]/[i:id]', function ($params) use ($db) {
+    list($entity, $id) = (array) $params;
+
     $result = $db->delete($entity, [
         'id' =>  $id
     ]);
@@ -423,21 +504,50 @@ $router->map('DELETE', '/[a:entity]/[i:id]', function ($entity, $id) use ($db) {
 // Handle routing
 // =============
 // match current request url
-$match = $router->match();
+$matches = $router->matches();
+$match = $matches[0];
+// print_r($matches);
 
-// call closure or throw 404 status
-if (is_array($match) && is_callable($match['target'])) {
-    call_user_func_array($match['target'], $match['params']);
-
-    // Handle logs
-    if($config->db['logging']) {
-        $queries = $db->log();
-        $queries = "\n".join("\n",$queries);
-        // Write the contents back to the file
-        $file = 'queries.log';
-        file_put_contents($file, $queries, FILE_APPEND | LOCK_EX);
-    }
-} else {
+if (!$match) {
     // no route was matched
     header($_SERVER["SERVER_PROTOCOL"] . ' 404 Not Found');
+    exit();
 }
+
+foreach ($matches as $match) {
+    // Call closure
+    $resp = $match['target']((object) $match['params']);
+
+    // Stop loop on false returns
+    if (!$resp) break;
+}
+
+// Handle db logs
+if ($config->db['logging']) {
+    $queries = $db->log();
+    $queries = "\n" . join("\n", $queries);
+    // Write the contents back to the file
+    $file = 'queries.log';
+    file_put_contents($file, $queries, FILE_APPEND | LOCK_EX);
+}
+
+// // call closure or throw 404 status
+// if (is_array($match) && is_callable($match['target'])) {
+
+//     // call_user_func_array($match['target'], $match['params']);
+//     // Process matches
+
+//     // $match['target']((object)$match['params']);
+
+//     // Handle db logs
+//     if ($config->db['logging']) {
+//         $queries = $db->log();
+//         $queries = "\n" . join("\n", $queries);
+//         // Write the contents back to the file
+//         $file = 'queries.log';
+//         file_put_contents($file, $queries, FILE_APPEND | LOCK_EX);
+//     }
+// } else {
+
+
+// }

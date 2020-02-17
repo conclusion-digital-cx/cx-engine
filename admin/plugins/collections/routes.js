@@ -16,6 +16,11 @@ export default [
             }
         ]
     },
+    {
+        path: '/collections/:name',
+        component: TypeBuilder,
+        props: true,
+    },
     // {
     //     path: '/collections/new',
     //     component: TypeBuilder,
