@@ -67,12 +67,6 @@ function region($name)
                 echo $mixed($page);
                 break;
         }
-        // $block = $mixed;
-        // if(isset($block->file)) {
-        //     include $block->file;
-        // } else {
-        //     echo $block;
-        // }
     }
 }
 

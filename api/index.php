@@ -1,10 +1,10 @@
 <?php
 require_once "lib/Medoo.php";
-require_once "lib/Router.php";  // Fork of AltoRouter
+require_once __DIR__."/../lib/Router.php";  // Fork of AltoRouter
 
 $router = new Router();
 
-$config = include("../config.php");
+$config = include(__DIR__."/../config.php");
 
 // Initialize
 // Using Medoo namespace
@@ -43,13 +43,13 @@ $router->map('GET', '', function () {
 // ******************
 // Specials: upload, _tasks, ..
 // ******************
-include "./specials.php";
+include __DIR__."/specials.php";
 
 
 // ===============
 // Authorization
 // ===============
-include "./auth.php";
+include __DIR__."/auth.php";
 
 // ===============
 // Middleware: Check token
@@ -58,11 +58,11 @@ $checkToken = function ($params) use ($config) {
 
     // TODO apply policies by schemas
     // Check policies
-    $apiKey = include("./policies/apiKey.php");
-    $isUser = include("./policies/isUser.php");
+    $apiKey = include(__DIR__."/policies/apiKey.php");
+    $isUser = include(__DIR__."/policies/isUser.php");
 
-    $resp[] = $apiKey();
-    $resp[] = $isUser();
+    $resp[] = $apiKey($config);
+    $resp[] = $isUser($config);
 
     $isAllowed = in_array(true, $resp);
     // echo $isAllowed;

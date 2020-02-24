@@ -11,7 +11,7 @@ export default (config = {}) => ({
   // Raw
   fetchRaw (path, options = { method: 'GET' }) {
     const {
-      server = 'http://localhost:8666/api',
+      server = window.server || 'http://localhost:8666/api',
       headers = ''
     } = config
     // console.log(config)

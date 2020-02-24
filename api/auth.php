@@ -1,14 +1,14 @@
 <?php
 
-$config = include("../config.php");
+$config = include(__DIR__."/../config.php");
 
 // GET /:entity
 use Ahc\Jwt\JWT;
 
-require_once("./lib/jwt/ValidatesJWT.php");
-require_once("./lib/jwt/JWTException.php");
-require_once("./lib/jwt/JWT.php");
-require_once("./utils.php");    // Responses
+require_once(__DIR__."/lib/jwt/ValidatesJWT.php");
+require_once(__DIR__."/lib/jwt/JWTException.php");
+require_once(__DIR__."/lib/jwt/JWT.php");
+require_once(__DIR__."/utils.php");    // Responses
 
 // Instantiate with key, algo, maxAge and leeway.
 $jwt = new JWT($config->tokenSecret);
@@ -21,9 +21,6 @@ $jwt = new JWT($config->tokenSecret);
 // ]);
 
 // $jwt->decode($token);
-
-
-
 
 $router->map('POST', '/login', function ($params)
 use ($db, $jwt) {

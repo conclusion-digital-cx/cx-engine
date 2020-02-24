@@ -5,7 +5,8 @@
     "build": "poi --prod src/main.js",
     "dev": "poi -p 8088 --serve src/main.js",
     "start": "npm run dev",
-    "server": "npx json-server db.json"
+    "server": "npx json-server db.json",
+    "build:lib": "vue-cli-service build --target lib --name cx-admin"
   },
   "keywords": [],
   "author": "",

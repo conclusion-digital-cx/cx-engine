@@ -11,7 +11,7 @@ The above copyright notice and this permission notice shall be included in all c
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-class AltoRouter {
+class Router {
 
 	/**
 	 * @var array Array of all routes (incl. named routes).
@@ -126,61 +126,17 @@ class AltoRouter {
 	}
 
 	/**
-	 * Reversed routing
-	 *
-	 * Generate the URL for a named route. Replace regexes with supplied parameters
-	 *
-	 * @param string $routeName The name of the route.
-	 * @param array @params Associative array of parameters to replace placeholders with.
-	 * @return string The URL of the route with named parameters in place.
-	 * @throws Exception
-	 */
-	public function generate($routeName, array $params = array()) {
-
-		// Check if named route exists
-		if(!isset($this->namedRoutes[$routeName])) {
-			throw new \Exception("Route '{$routeName}' does not exist.");
-		}
-
-		// Replace named parameters
-		$route = $this->namedRoutes[$routeName];
-		
-		// prepend base path to route url again
-		$url = $this->basePath . $route;
-
-		if (preg_match_all('`(/|\.|)\[([^:\]]*+)(?::([^:\]]*+))?\](\?|)`', $route, $matches, PREG_SET_ORDER)) {
-
-			foreach($matches as $index => $match) {
-				list($block, $pre, $type, $param, $optional) = $match;
-
-				if ($pre) {
-					$block = substr($block, 1);
-				}
-
-				if(isset($params[$param])) {
-					// Part is found, replace for param value
-					$url = str_replace($block, $params[$param], $url);
-				} elseif ($optional && $index !== 0) {
-					// Only strip preceeding slash if it's not at the base
-					$url = str_replace($pre . $block, '', $url);
-				} else {
-					// Strip match block
-					$url = str_replace($block, '', $url);
-				}
-			}
-
-		}
-
-		return $url;
-	}
-
-	/**
 	 * Match a given Request Url against stored routes
 	 * @param string $requestUrl
 	 * @param string $requestMethod
 	 * @return array|boolean Array with route information on success, false on failure (no match).
 	 */
 	public function match($requestUrl = null, $requestMethod = null) {
+		$resp = $this->matches($requestUrl, $requestMethod);
+		return is_array($resp) ? $resp[0] : $resp;
+	}
+
+	public function matches($requestUrl = null, $requestMethod = null) {
 
 		$params = array();
 		$match = false;
@@ -206,6 +162,7 @@ class AltoRouter {
 			$requestMethod = isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : 'GET';
 		}
 
+		$matches = [];
 		foreach($this->routes as $handler) {
 			list($methods, $route, $target, $name) = $handler;
 
@@ -241,14 +198,14 @@ class AltoRouter {
 					}
 				}
 
-				return array(
+				$matches[] = array(
 					'target' => $target,
 					'params' => $params,
 					'name' => $name
 				);
 			}
 		}
-		return false;
+		return $matches;
 	}
 
 	/**

@@ -5,9 +5,9 @@
  which is defined in your config.
 */
 
-$config = include("../config.php");
+// $config = include("../config.php");
 
-return function() use ($config) {
+return function($config) {
     if(!isset($_SERVER['HTTP_AUTHORIZATION'])) {
         return false;
     }

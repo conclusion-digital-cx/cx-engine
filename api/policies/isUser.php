@@ -2,10 +2,9 @@
 
 use Ahc\Jwt\JWT;
 
-$config = include("../config.php");
 $jwt = new JWT($config->tokenSecret);
 
-return function () use ($jwt) {
+return function ($config) use ($jwt) {
     // if (!isset($_SERVER['HTTP_AUTHORIZATION'])) {
     //     return false;
     // }

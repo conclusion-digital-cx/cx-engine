@@ -20,9 +20,8 @@ $regions = [
 
 // Process config->autoload
 foreach ($config->autoload as &$value) {
-    // $resp = include("plugins/$value/register.php");
     $resp = include("plugins/$value/register.php");
-    debug($resp);
+    // debug($resp);
     $regions = array_merge($regions, $resp);
 }
 
@@ -49,7 +48,9 @@ $blocks['news'] = function() {
     return render ("./blocks/news.php");
 };
 
+// echo $cx;
 
+// or Custom render
 if ($page) {
     // $regions['main'][] = $page->body;
     $regions['main'][] = renderTemplate($page->body, $blocks);
@@ -65,3 +66,4 @@ if ($page) {
 }
 
 include "themes/$config->theme/index.php";
+
