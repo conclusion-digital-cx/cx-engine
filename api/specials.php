@@ -162,7 +162,7 @@ $router->map('GET', '/layouts', function () use ($db) {
 // Themes
 // =======
 $router->map('GET', '/themes', function () use ($db) {
-    $path = "../themes";
+    $path = __DIR__ . "/../themes";
     $files = glob("$path/*", GLOB_ONLYDIR);
     // print_r($files);
     foreach ($files as &$value) {
@@ -183,7 +183,7 @@ $router->map('GET', '/themes', function () use ($db) {
 // Blocks
 // =======
 $router->map('GET', '/blocks', function () use ($db) {
-    $path = "../blocks/";
+    $path = __DIR__ . "/../blocks/";
     $files = glob("$path*.*");
     foreach ($files as &$value) {
         // Remove ../

@@ -22,7 +22,7 @@ export default {
   computed: {
     _contentItems: vm => {
       return vm.items
-        // .filter(elem => !elem.core)
+        .filter(elem => elem.showInNavigation)
         .map(elem => ({
           path: `/content/${elem.name}`,
           // path: `/content/${elem.name}/${elem._id}`,
@@ -41,16 +41,20 @@ export default {
         // { path: '/blocks', text: 'Blocks' },
         // { path: '/media', text: 'Media' },
         // { path: '/collections', text: 'Collections' },
-
         { heading: 'Content' },
+        { path: '/media', text: 'Files Upload' },
+        { path: '/pages', text: 'Pages' },
+        { path: '/blocks', text: 'Blocks' },
+        { path: '/themes', text: 'Themes' },
+
+        { heading: 'Data' },
         ...vm._contentItems,
         { heading: 'General' },
-        // { path: '/plugins', icon: 'settings', text: 'Plugins' },
-        { path: '/roles', icon: 'settings', text: 'Roles & Permissions' },
-        // { path: '/upload', icon: 'settings', text: 'Files Upload' },
-        // { path: '/content', icon: 'settings', text: 'Content Manager' },
-        { path: '/typebuilder', icon: 'settings', text: 'Type Builder' },
-        { path: '/settings', icon: 'settings', text: 'Settings' }
+        // { path: '/plugins',text: 'Plugins' },
+        { path: '/roles', text: 'Roles & Permissions' },
+        // { path: '/content',text: 'Content Manager' },
+        { path: '/typebuilder', text: 'Type Builder' },
+        { path: '/settings', text: 'Settings' }
       ]
     }
   },

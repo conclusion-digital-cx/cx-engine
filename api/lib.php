@@ -1,11 +1,20 @@
 <?php
 
 use Medoo\Medoo;
+
 require_once "lib/Medoo.php";
 require_once __DIR__ . "/../lib/Router.php";  // Fork of AltoRouter
 
 
-return function ($config, $requestUrl) {
+return function ($config = [], $requestUrl = '') {
+
+    // Defaults
+    $config = (object)array_merge([
+        'debug' => false
+    ], (array)$config);
+
+    // Destructure config
+    $debug = $config->debug;
 
     $router = new Router();
 
@@ -91,15 +100,28 @@ return function ($config, $requestUrl) {
         $entity = $params->entity;
 
         // Move to https://github.com/typicode/json-server
+        // $functionFields = [
+        //     'page', 'itemsPerPage', 'sortBy', 'sortDesc',
+        //     'groupBy', 'groupDesc', 'mustSort', 'multiSort'
+        // ];
         $functionFields = [
-            'page', 'itemsPerPage', 'sortBy', 'sortDesc',
-            'groupBy', 'groupDesc', 'mustSort', 'multiSort'
+            '_start', '_limit'
         ];
+
+        function array_except($array, $keys)
+        {
+            foreach ($keys as $key) {
+                unset($array[$key]);
+            }
+            return $array;
+        }
 
         try {
             $fields = isset($_GET['fields']) ? $_GET['fields'] : '*';
-            $where = $_GET;
-            $where = array_diff_key($where, array_flip($functionFields));
+
+            // Where = GET - functionFields
+            $where = $_GET; // array_values($_GET);   // Clone
+            $where = array_except($where, $functionFields);
 
             // Process where
             foreach ($where as &$value) {
@@ -107,30 +129,43 @@ return function ($config, $requestUrl) {
                 $value = $value === 'NULL' ? null : $value;
             }
 
+            // Process special modifiers
+            $specials = array_merge([
+                '_start' => 0,
+                '_limit' => 1000
+            ], $_GET);
+            $where['LIMIT'] = [$specials['_start'], $specials['_limit']];
+
             // TODO
             // Set skips, limits, sorts
             // page=1&itemsPerPage=10&sortBy=&sortDesc=&groupBy=&groupDesc=&mustSort=false&multiSort=false
             // $where['LIMIT'] = [$_GET['page'] * $_GET['itemsPerPage'], $_GET['itemsPerPage']];
 
+            // print_r($where);
+            // print_r($specials);
             $rows = $db->select($entity, $fields, $where);
             if (!is_array($rows)) {
-                return true;    // Table not exist...exit this route handler
+                // return true;    // Table not exist...exit this route handler
+                throw new Exception("No rows");
             }
 
             // Process model
             $model = getModel($entity);
             $fn = $model->get;
+
+            // print_r($rows);
             // Call get on each row
             foreach ($rows as &$row) {
                 $resp = $fn($row);
-                // print_r($resp);
                 // Merge
                 $row = array_merge($row, $resp);
             }
+            // print_r($rows);
 
             jsonArrayResponse($rows);
         } catch (Throwable $t) {
             notFoundResponse($t);
+            // var_dump( $db->error() );
         }
     });
 
@@ -178,7 +213,7 @@ return function ($config, $requestUrl) {
     // });
 
     // PATCH /:entity/:id ( update only fields provided )
-    $router->map('PATCH', '/[a:entity]/[i:id]', function ($params) use ($db) {
+    $router->map('PATCH', '/[a:entity]/[i:id]', function ($params) use ($db, $debug) {
         $entity = $params->entity;
         $id = $params->id;
 
@@ -190,21 +225,33 @@ return function ($config, $requestUrl) {
             $model = getModel($entity);
             $fn = $model->save;
             $computed = $fn($body);
-            $row = array_merge($body, $computed);
+            $bodyParsedByModel = array_merge($body, $computed);
 
-            // print_r($body);
+            // print_r($bodyParsedByModel);
+            // echo $entity;
+            // echo $id;
+            // exit();
 
-            $result = $db->update($entity, $body, ['id' =>  $id]);
-            if (!$result) {
-                throw new Exception("Not found");
-            }
+            $data = $db->update($entity, $bodyParsedByModel, ['id' =>  $id]);
+
+            // if (!$result) {
+            //     exit("Not found");
+            //     // throw new Exception("Not found");
+            // }
+
+            // Returns the number of rows affected by the last SQL statement
+            $count = $data->rowCount();
 
             header("content-type:application/json");
-            $json = json_encode($body);
+            $json = json_encode(array('count' => $count));
             // $json = json_encode(array('message' => "saved"));
             echo $json;
         } catch (Throwable $t) {
             notFoundResponse($t);
+            exit();
+            // if ($debug) {
+            //     var_dump($db->error());
+            // }
         }
     });
 

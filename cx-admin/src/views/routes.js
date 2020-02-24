@@ -1,10 +1,10 @@
 import NotFound from './NotFound'
 
 // Plugins
-import pages from './pages/routes.js'
+import pages from '../addons/pages/routes.js'
 import CollectionsName from './collections/_name'
 import collections from './collections/routes.js'
-import media from './media/routes.js'
+import media from '../addons/media/routes.js'
 import auth from './auth'
 // import roles from './roles'
 // import Home from './Home'

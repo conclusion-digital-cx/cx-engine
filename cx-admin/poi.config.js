@@ -1,5 +1,12 @@
 module.exports = {
   output: {
+    fileNames:
+    {
+      js: 'assets/[name].js',
+      css: 'assets/[name].css',
+      font: 'assets/[path][name].[ext]',
+      image: 'assets/[path][name].[ext]'
+    },
     dir: '../admin',
     publicUrl: './' // Make sure it works on GH pages
   },

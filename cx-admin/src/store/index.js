@@ -29,7 +29,8 @@ export default new Vuex.Store({
           Authorization: ''
         },
         server: '',
-        apiKey: ''
+        apiKey: '',
+        ...window.config
       },
       mutations: {
         set: (state, payload) => {

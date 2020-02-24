@@ -96,7 +96,7 @@ function getModel($name)
     ];
 
     // Process model
-    $model = "./schemas/$name.php";
+    $model = __DIR__."/schemas/$name.php";
     if (file_exists($model)) {
         $model = include($model);
         return (object) array_merge($fakeModel, $model);

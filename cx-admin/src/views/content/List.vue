@@ -179,7 +179,7 @@ export default {
         <v-btn
           icon
           class="mx-2"
-          @click="fetch()"
+          @click="fetch(options)"
         >
           <v-icon>refresh</v-icon>
         </v-btn>

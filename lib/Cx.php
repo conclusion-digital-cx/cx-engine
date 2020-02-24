@@ -43,6 +43,7 @@ class Cx
         'footer' => []
     ];
     public $router;
+    public $page;
 
     function __construct($config)
     {
@@ -51,13 +52,8 @@ class Cx
         // Decompose config
         $this->theme = $config->theme;
         $this->debug = $config->debug;
-        
-        // ======================
-        // Search routes
-        // $dir    = '/views';
-        // $files = glob(  'views/**/*.*' );
-        // print_r($files);
-        
+        $this->root = $config->root;
+
         // Database
         $dbpath = $config->db['database_file'];
         $db = new CxDb($dbpath);
@@ -78,11 +74,55 @@ class Cx
         $this->notfound = $cb;
     }
 
+    function getBlocksFromPath($path = "./blocks")
+    {
+        $blocks = [];
+        $files = glob("$path/*.*");
+    
+        foreach ($files as &$file) {
+            // Remove ../
+            // $value = substr($value, strlen('../'));
+            $value = substr($file, strlen("$path/"));
+            $value = substr($value, 0, -4); // Extension
+    
+            // Add to blocks
+            $blocks[$value] = (object) [
+                'file' => $file,
+                'name' => $value
+                // 'region' => 'afterbody'
+            ];
+        }
+        return $blocks;
+    }
+
+    function addBlocksFromPath($path = "./blocks")
+    {
+        $newBlocks = $this->getBlocksFromPath($path);
+        $this->blocks = array_merge($this->blocks, $newBlocks);
+    }
+
     // Match request. Returns Page() object
     function getPage()
     {
         $obj = $this->match();
         return new Page($obj);
+    }
+
+    function run()
+    {
+        // match current request url
+        $matches = $this->router->matches();
+        // debugToConsole($matches);
+        // debugToConsole($this->router);
+
+        foreach ($matches as $match) {
+            // Call closure
+            $request = (object) $match['params'];
+            $resp = $match['target']($request);
+
+            // Stop loop on false returns
+            if (!$resp) break;
+        }
     }
 
     // TODO move to Medoo
@@ -98,7 +138,7 @@ class Cx
             // Call closure
             $request = (object) $match['params'];
             $resp = $match['target']($request);
-        
+
             // Stop loop on false returns
             if (!$resp) break;
         }
@@ -140,9 +180,10 @@ class Cx
 
     function region($name)
     {
-        // global $blocks, 
+        // Context for render
         $regions = $this->regions;
-        $page = $this->page;   // Context for render
+        $page = $this->page;   
+        $blocks = $this->blocks;
 
         $blocksInregion = $regions[$name];
         // debug("Render region: $name");
@@ -169,66 +210,41 @@ class Cx
         }
     }
 
-    function render()
+    function renderFile($file)
     {
-        $page = $this->match();
-        $regions = $this->regions;
-
-        // =========
-        // Theme helper functions
-        // =========
-        function region($name)
-        {
-            // return $this->region($name);
-            return 'cool';
-        }
-        function render($file, $ctx = "")
-        {
-            ob_start();
-            include $file;
-            return ob_get_clean();
-        }
-        function renderTemplate($template, $vars)
-        {
-            return \preg_replace_callback(
-                "!{{\s*(?P<key>[a-zA-Z0-9_-]+?)\s*}}!",
-                function ($match) use ($vars) {
-                    $key = $match["key"];
-                    $mixed = isset($vars[$key]) ?
-                        $vars[$key] :
-                        $match[0];
-
-                    return ($mixed instanceof Closure) ?
-                        $mixed() :
-                        $mixed;
-                },
-                $template
-            );
-        }
-
-        if ($page) {
-            $regions['main'][] = renderTemplate($page->body, $this->blocks);
-        } else {
-            $url = strtok($_SERVER["REQUEST_URI"], '?');
-            $regions['main'][] = "<h1>Page doesn't exist.</h1>";
-        }
-
-        $theme = $this->theme;
-        // include __DIR__."/../themes/$theme/index.php";
-        $html = render(__DIR__ . "/../themes/$theme/index.php");
-        return $html;
+        ob_start();
+        include $file;
+        return ob_get_clean();
     }
+
+    // function render()
+    // {
+    //     $page = $this->match();
+    //     $regions = $this->regions;
+
+    //     if ($page) {
+    //         $regions['main'][] = renderTemplate($page->body, $this->blocks);
+    //     } else {
+    //         $url = strtok($_SERVER["REQUEST_URI"], '?');
+    //         $regions['main'][] = "<h1>Page doesn't exist.</h1>";
+    //     }
+
+
+    //     // include __DIR__."/../themes/$theme/index.php";
+    //     $html = $this->renderFile($this->root . "/themes/{$this->theme}/index.php");
+    //     // $html = render(__DIR__ . "/../themes/$theme/index.php");
+    //     return $html;
+    // }
 
     function __toString()
     {
-        return $this->render();
+        return $this->renderFile($this->root . "/themes/{$this->theme}/index.php");
     }
-
 
     function debug($what, $title = "")
     {
         if ($this->debug) {
-        // if (isset($_GET['debug']) || $this->debug) {
+            // if (isset($_GET['debug']) || $this->debug) {
             debugToConsole($what, $title);
         }
     }

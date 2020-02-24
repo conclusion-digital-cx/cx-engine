@@ -74,10 +74,11 @@ export default {
         // SET FORM
         this.form = {
           // Defaults
-          permissions: {
-            public: [],
-            authenticated: []
-          },
+          // TODO
+          // permissions: {
+          //   public: [],
+          //   authenticated: []
+          // },
           ...this.form,
           // attributes: [],
           ...resp,
@@ -268,6 +269,14 @@ export default {
             v-model="form.key"
             label="Primary Key"
           /> -->
+          <v-switch
+            v-model="form.showInNavigation"
+            label="Show in navigation"
+          />
+
+          <Toggle label="View as Json">
+            {{ form }}
+          </Toggle>
         </div>
         <v-spacer />
         <v-btn
