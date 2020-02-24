@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link rel="icon" href="<%= envs.PUBLIC_URL %>/favicon.ico">
+    <title>CxE Backend</title>
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic">
+    <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
+
+    <% if (envs.POI_APP_CDN === 'true') { %>
+      <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
+      <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+    <% } %>
+
+    <style>
+      .fullscreenLoader {
+          margin: 0;
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          text-align: center;
+      }
+      .fullscreenLoader img {
+          margin: 0;
+          position: absolute;
+          width: 200px;
+      }
+  </style>
+  </head>
+  <body>
+    <noscript>
+      <strong>We're sorry but nutriopt doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
+    </noscript>
+    <div id="app">
+      <div class='fullscreenLoader'>
+          <p>App is loading...</p>
+          <img src="loader.gif"/>
+      </div>
+    </div>
+
+    <% if (envs.POI_APP_CDN === 'true') { %>
+      <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+      <!-- <script src="https://unpkg.com/vue-router@2.x/dist/vue-router.js"></script> -->
+      <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+    <% } %>
+
+    <script>
+      // window.localStorage.setItem('api','http://localhost:8888/5e2084205591c709b6c2512e')
+    </script>
+    <!-- built files will be auto injected -->
+  </body>
+</html>
