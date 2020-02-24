@@ -186,7 +186,9 @@ $router->map('PATCH', '/[a:entity]/[i:id]', function ($params) use ($db) {
         // Process model
         $model = getModel($entity);
         $fn = $model->save;
-        $body = $fn($body);
+        $computed = $fn($body);
+        $row = array_merge($body, $computed);
+
         // print_r($body);
 
         $result = $db->update($entity, $body, ['id' =>  $id]);

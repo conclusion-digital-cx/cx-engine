@@ -19,14 +19,12 @@ Vue.prototype.$service = $service
 Vue.prototype.$store = {
   actions: {
     async USER_LOGIN (payload) {
-      console.log(payload)
       try {
         const resp = await $service.login(payload)
-        console.log(resp)
 
         if (resp) {
           // this.$router.push(this.redirectTo)
-          window.localStorage.setItem('token', resp.token)
+          // window.localStorage.setItem('token', resp.token)
           window.location.href = `http://localhost:8080/#?token=${resp.token}`
         }
         return resp
