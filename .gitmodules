@@ -1,3 +1,0 @@
-[submodule "mongoapi"] 
-  path = mongoapi
-  url = git://github.com/jellehak/mongoapi

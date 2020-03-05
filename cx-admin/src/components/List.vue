@@ -43,7 +43,7 @@ export default {
     async deleteItem (item) {
       try {
         this.loading = true
-        const resp = await this.$service.deleteById(this.name, item.id)
+        await this.$service.deleteById(this.name, item.id)
 
         // Remove item from UI
         this.items.splice(this.items.indexOf(item), 1)

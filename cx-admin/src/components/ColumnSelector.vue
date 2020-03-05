@@ -111,7 +111,11 @@ export default {
       <v-list class="pa-0">
         <!-- Fixed -->
         <template v-if="_fixedHeaders.length">
-          <v-list-item v-for="(item) in _fixedHeaders" :key="item.value" class="non-hoverable">
+          <v-list-item
+            v-for="(item) in _fixedHeaders"
+            :key="item.value"
+            class="non-hoverable"
+          >
             <Tooltip bottom>
               <template #activator="{ on }">
                 <span v-on="on">
@@ -145,7 +149,11 @@ export default {
         </template>
       </v-list>
 
-      <v-list v-sortable:sorting="_sortableHeaders" class="pa-0" @sort="onSort">
+      <v-list
+        v-sortable:sorting="_sortableHeaders"
+        class="pa-0"
+        @sort="onSort"
+      >
         <!-- Sortable -->
         <v-list-item
           v-for="(item) in _sortableHeaders"

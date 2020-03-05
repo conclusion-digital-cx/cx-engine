@@ -1,7 +1,7 @@
 <script>
-import InputDate from './InputDate'
-import InputDateTime from './InputDateTime'
-import InputSelectRelation from './InputSelectRelation'
+import InputDate from './InputDate.vue'
+import InputDateTime from './InputDateTime.vue'
+import InputSelectRelation from './InputSelectRelation.vue'
 
 export default {
   components: {
@@ -13,8 +13,9 @@ export default {
     name: { type: String, default: 'collections' },
 
     title: { type: String, default: 'No title' },
-    value: { type: Boolean, default: true },
-    form: { type: Object,
+    value: {
+      type: Object,
+      description: 'The form values',
       default () {
         return {
           // name: 'Test'
@@ -24,8 +25,10 @@ export default {
     fields: { type: Array,
       default () {
         return [
-          { name: 'name',
+          {
+            name: 'name',
             type: 'string',
+            formType: 'text',
             minLength: 3,
             unique: true,
             configurable: false,
@@ -49,7 +52,7 @@ export default {
     }
   },
   computed: {
-    options () { return this.form }
+    options () { return this.value }
   },
   methods: {
     getRules (arrayWithStrings = []) {
@@ -70,7 +73,13 @@ export default {
 
     <!-- {{ fields }} -->
     <!-- <h2>Options</h2> -->
-    <div v-for="(field,index) in fields" :key="index">
+    <div
+      v-for="(field,index) in fields"
+      :key="index"
+    >
+      <!-- <small>{{ field.type }}</small> -->
+      <!-- <small>{{ field }}</small> -->
+
       <!-- String -->
       <template v-if="field.type === 'string'">
         <v-text-field
@@ -118,7 +127,7 @@ export default {
           v-model="options[field.name]"
           :label="field.label || field.name"
           v-bind="field"
-          type="text"
+          type="file"
           :rules="getRules(field.rules)"
         />
       </template>

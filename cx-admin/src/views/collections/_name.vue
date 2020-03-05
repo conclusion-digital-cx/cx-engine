@@ -68,23 +68,6 @@ export default {
       // window.open(item.url)
       // this.$router.push(`/collections/${item.name}`)
       // window.open(item.url,"_self")
-    },
-
-    // DEBUG
-    async createTable () {
-      try {
-        this.loading = true
-        // const resp = await fetch(`/api/collections/${this.name}/create`, {
-        const resp = await fetch(`/api/collections/${this.name}/createfromjson`, {
-          method: 'GET'
-          // body: JSON.stringify(form)
-        })
-        this.$emit('success')
-      } finally {
-        this.loading = false
-        // Close form
-        this.$emit('input', false)
-      }
     }
   }
 }
@@ -95,7 +78,7 @@ export default {
     <!-- {{collection}} -->
     <!-- {{schema}} -->
     <!-- {{_itemTitle}} -->
-
+    <!-- {{ items }} -->
     <v-breadcrumbs :items="_breadcrumbs" />
 
     <!-- <Form
@@ -107,16 +90,11 @@ export default {
       /> -->
 
     <Grid
-      :name="name"
+      :items="items"
       :title-key="_itemTitle"
       @click:item="onClickItem"
       @click:edit="onClickEdit"
       @click:create="dialog = true"
-    >
-      <template slot="actions-right">
-        <!-- <v-btn class="mx-2" :loading="loading" @click="createTable">create table</v-btn> -->
-        <!-- <v-btn class="mx-2" @click="editCollection">change collection</v-btn> -->
-      </template>
-    </Grid>
+    />
   </div>
 </template>

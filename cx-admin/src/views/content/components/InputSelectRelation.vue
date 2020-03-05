@@ -4,7 +4,8 @@ export default {
     value: { type: String, default: '' },
     nature: { type: String, default: '' },
     target: { type: String, default: '' },
-    targetColumnName: { type: String, default: 'name' }
+    targetColumnName: { type: String, default: 'name' },
+    key: { type: String, default: '_id' }
   },
   data () {
     return {
@@ -48,7 +49,7 @@ export default {
       v-bind="$attrs"
       :items="items"
       :multiple="nature === 'manyToOne'"
-      item-value="id"
+      :item-value="key"
       :item-text="targetColumnName || 'name'"
       @input="$emit('input',$event)"
     />

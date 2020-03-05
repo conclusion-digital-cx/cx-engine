@@ -1,6 +1,9 @@
 <template>
   <div>
-    <v-btn outlined @click="toggle">
+    <v-btn
+      outlined
+      @click="toggle"
+    >
       {{ label }} <v-icon>{{ icon }}</v-icon>
     </v-btn>
     <div v-if="value || show">

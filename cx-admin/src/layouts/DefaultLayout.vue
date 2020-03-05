@@ -6,22 +6,12 @@ export default {
   data: () => ({
     title: TITLE,
     dark: false,
-    drawer: true,
-    items: [
-      // { path: '/', text: 'Dashboard' },
-      // { path: '/themes', text: 'Themes' },
-      // { path: '/pages', text: 'Pages' },
-      // { path: '/users', text: 'Users' },
-      // { path: '/blocks', text: 'Blocks' },
-      // { path: '/media', text: 'Media' },
-      // { path: '/collections', text: 'Collections' },
-      // { divider: true },
-      // { path: '/settings', text: 'Settings' }
-    ]
+    drawer: true
   }),
   computed: {
     _contentItems: vm => {
-      return vm.items
+      // return []
+      return vm.$store.state.types.items
         .filter(elem => elem.showInNavigation)
         .map(elem => ({
           path: `/content/${elem.name}`,
@@ -34,19 +24,11 @@ export default {
     _items: vm => {
       return [
         { path: '/', text: 'Dashboard' },
-        // { heading: 'Basics' },
-        // { path: '/themes', text: 'Themes' },
-        // { path: '/pages', text: 'Pages' },
-        // { path: '/users', text: 'Users' },
-        // { path: '/blocks', text: 'Blocks' },
-        // { path: '/media', text: 'Media' },
-        // { path: '/collections', text: 'Collections' },
         { heading: 'Content' },
         { path: '/media', text: 'Files Upload' },
         { path: '/pages', text: 'Pages' },
         { path: '/blocks', text: 'Blocks' },
         { path: '/themes', text: 'Themes' },
-
         { heading: 'Data' },
         ...vm._contentItems,
         { heading: 'General' },
@@ -58,11 +40,18 @@ export default {
       ]
     }
   },
-  async created () {
-    const resp = await this.$serviceFactory('types').getAll()
-    this.items = resp
+  async mounted () {
+    // const resp = await this.$serviceFactory('types').getAll()
+    // this.items = resp
     // Set store
     // this.$store.commit("types/set", resp);
+    try {
+      this.$store.dispatch('plugins/getAll')
+      this.$store.dispatch('types/getAll')
+    } catch (err) {
+      console.warn(err)
+      this.$snackbar('Something went wrong')
+    }
   }
 }
 </script>
@@ -82,7 +71,9 @@ export default {
 
     <v-content>
       <v-container>
-        <!-- store{{ $store.state.types.items }} -->
+        <!-- {{ $store.state }} -->
+        <!-- {{ _contentItems }} -->
+        <!-- types{{ $store.state.types.items }} -->
         <slot />
       </v-container>
     </v-content>

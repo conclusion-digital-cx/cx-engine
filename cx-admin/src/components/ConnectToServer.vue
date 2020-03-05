@@ -1,8 +1,15 @@
 <template>
   <v-container>
     <form @submit.prevent="submit(form)">
-      <v-text-field v-model="form.server" label="Server" />
-      <v-btn :loading="loading" class="primary" type="submit">
+      <v-text-field
+        v-model="form.server"
+        label="Server"
+      />
+      <v-btn
+        :loading="loading"
+        class="primary"
+        type="submit"
+      >
         Connect
       </v-btn>
     </form>

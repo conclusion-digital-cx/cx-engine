@@ -23,11 +23,16 @@ export default {
         // { text: 'id', value: 'id' },
         // { text: 'createdAt', value: 'createdAt' }
       ],
-      options: {}
+      options: {},
+      selected: []
     }
   },
 
   computed: {
+    _defaultPrimaryKey () {
+      return this.$store.state.settings.defaultPrimaryKey
+    },
+
     _items () {
       return this.items
     },
@@ -47,7 +52,7 @@ export default {
       ]
     },
 
-    breadcrumbs () {
+    _breadcrumbs () {
       return [
         {
           text: 'Content',
@@ -63,9 +68,11 @@ export default {
   },
 
   watch: {
+
+    // Make sure to refetch when content type changes
     $route (to, from) {
       // console.log(to, from)
-      if (to.name === 'table') {
+      if (from.params.typeSlug !== to.params.typeSlug) {
         this.fetch()
       }
     },
@@ -77,7 +84,6 @@ export default {
       },
       deep: true
     }
-
   },
 
   methods: {
@@ -86,6 +92,9 @@ export default {
         this.loading = true
         const type = await this.$serviceFactory('types').getOne({ name: this.typeSlug })
         this.type = type
+
+        this.customizedHeaders = type.customizedHeaders || []
+
         return type.attributes
       } catch (err) {
         console.warn(err)
@@ -97,7 +106,7 @@ export default {
 
     rowClick (row) {
       const idKey = this.type.key || ROW_KEY
-      const id = row[idKey]
+      const id = row[idKey] || row['_id']
       this.$router.push(`/content/${this.typeSlug}/edit/${id}`)
     },
 
@@ -109,14 +118,19 @@ export default {
 
       // Map Vuetify to json-server spec
       // page=1&itemsPerPage=10&sortBy=&sortDesc=&groupBy=&groupDesc=&mustSort=false&multiSort=false
-      console.log(options)
+      // console.log(options)
       const serverOptions = {
         // TODO
         // _sort: options.sortBy,
         // _order: options.sortDesc,
-        _start: (options.page - 1) * options.itemsPerPage,
-        _limit: options.itemsPerPage
+        _start: (options.page - 1) * options.itemsPerPage || 0,
+        _limit: options.itemsPerPage || 10
       }
+
+      // Populate the relations
+      serverOptions._embed = [
+        'user'
+      ]
 
       // Get Content
       try {
@@ -130,15 +144,39 @@ export default {
       }
     },
 
-    onColumnInput (newHeaders) {
-      this.customizedHeaders = newHeaders
+    deleteMultiple (selected = []) {
+      selected.map(this.deleteItem)
+    },
 
-      // Sync to localStorage
-      // storage.save(
-      //   newHeaders
-      //     .map(elem => elem.value)
-      //     // .filter((v, i, a) => a.indexOf(v) === i) // unique
-      // )
+    deleteItem (item) {
+      const primaryKey = this._defaultPrimaryKey
+
+      const id = item[primaryKey]
+      const { items } = this
+
+      return this.$service.deleteById(this.typeSlug, id).then(() => {
+        // Remove locally as well
+        const item = items.filter(elem => elem[primaryKey] === id)[0]
+        // console.log(items, id, item, items.indexOf(item))
+        items.splice(items.indexOf(item), 1)
+
+        // Clear selection
+        this.selected = []
+
+        // Notify user
+        this.$snackbar('Item removed')
+      })
+    },
+
+    onColumnInput (newHeaders) {
+      // // TODO Save
+      this.$store.dispatch('types/update', {
+        ...this.type,
+        customizedHeaders: newHeaders
+      })
+
+      // Set local
+      this.customizedHeaders = newHeaders
     }
   }
 }
@@ -154,7 +192,7 @@ export default {
 
     <v-row class="ma-0">
       <v-breadcrumbs
-        :items="breadcrumbs"
+        :items="_breadcrumbs"
         divider=">"
       />
 
@@ -218,12 +256,48 @@ export default {
         </v-btn> -->
       </v-row>
 
+      <!-- Selections actions -->
+      <template v-if="selected.length">
+        <v-toolbar
+          dense
+          fixed
+          flat
+          absolute
+          class="ma-0"
+          width="100%"
+          color="blue blue--text lighten-4"
+        >
+          <v-row align="center">
+            {{ selected.length }} {{ selected.length === 1 ? "object": "objects" }} selected
+            <v-btn
+              text
+              color="blue"
+              @click="selected = []"
+            >
+              Cancel
+            </v-btn>
+            <v-spacer />
+            <v-btn
+              text
+              icon
+              color="red"
+              @click="deleteMultiple(selected)"
+            >
+              <v-icon>delete</v-icon>
+            </v-btn>
+          </v-row>
+        </v-toolbar>
+      </template>
+
       <v-data-table
+        v-model="selected"
         :loading="loading"
         :headers="_headers"
         :items="loading ? [] :_items"
         :server-items-length="totalItems"
         :options.sync="options"
+        :show-select="true"
+        :item-key="_defaultPrimaryKey"
         @click:row="rowClick"
       >
         <!-- TODO Custom table cells -->

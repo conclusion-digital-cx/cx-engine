@@ -1,4 +1,3 @@
-
 <script>
 import TYPES from './TYPES'
 import { ROW_KEY } from '@/config'
@@ -165,7 +164,10 @@ export default {
     />
 
     <template v-for="(role,index) in permissions || []">
-      <v-card class="mt-5">
+      <v-card
+        :key="index"
+        class="mt-5"
+      >
         <v-card-title>
           <div>
             Roles & permissions ({{ role.text }})

@@ -7,7 +7,10 @@
     @dragenter.stop.prevent="onDragenter"
     @dragleave.stop.prevent="onDragleave"
   >
-    <slot>Drop files here or click to upload.</slot>
+    <slot>
+      Drop files here or click to upload.
+      <input type="file">
+    </slot>
   </div>
 </template>
 

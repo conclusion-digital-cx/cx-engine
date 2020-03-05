@@ -1,6 +1,6 @@
 <script>
-import Grid from './Grid'
-import Form from './Form'
+import Grid from './Grid.vue'
+import Form from './Form.vue'
 
 export default {
   components: {
@@ -89,7 +89,10 @@ export default {
     <!-- <slot/> -->
 
     <v-row>
-      <v-btn class="btn" @click="dialog = true">
+      <v-btn
+        class="btn"
+        @click="dialog = true"
+      >
         Create new
       </v-btn>
       <slot name="actions-left" />
@@ -99,7 +102,10 @@ export default {
 
     <v-layout wrap>
       <!-- Grid -->
-      <Grid :loading="loading" :items="items">
+      <Grid
+        :loading="loading"
+        :items="items"
+      >
         <template #card="{item}">
           <!-- <v-card
                   :href="item.url"
@@ -111,19 +117,32 @@ export default {
             @click="itemClick(item)"
           >
             <v-card-title>
-              <div class="text-truncate" style="width:50%">
+              <div
+                class="text-truncate"
+                style="width:50%"
+              >
                 {{ item[titleKey] || item.name || item.title || 'No title' }}
               </div>
               <v-spacer />
 
               <div class="actions text-right">
-                <v-btn icon text class="pull-right" @click.stop="editItem(item)">
+                <v-btn
+                  icon
+                  text
+                  class="pull-right"
+                  @click.stop="editItem(item)"
+                >
                   <v-icon>edit</v-icon>
                 </v-btn>
               </div>
 
               <div class="actions text-right">
-                <v-btn icon text class="pull-right" @click.stop="deleteItem(item)">
+                <v-btn
+                  icon
+                  text
+                  class="pull-right"
+                  @click.stop="deleteItem(item)"
+                >
                   <v-icon>close</v-icon>
                 </v-btn>
               </div>

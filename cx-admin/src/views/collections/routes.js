@@ -1,6 +1,6 @@
-import index from './index.js'
-// import index from './Overview.js'
-import Form from './Form.js'
+import index from './index.vue'
+// import index from './Overview.vue'
+import Form from './Form.vue'
 
 export default [
   {

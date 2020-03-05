@@ -27,15 +27,15 @@ export default {
     @input="$emit('input',$event)"
   > -->
   <v-navigation-drawer
-  :value="value"
-  app
-  clipped
-  dark
-  color="#223440"
-  mobile-break-point="600"
-  width="200"
-  @input="$emit('input',$event)"
->
+    :value="value"
+    app
+    clipped
+    dark
+    color="#223440"
+    mobile-break-point="600"
+    width="200"
+    @input="$emit('input',$event)"
+  >
     <v-list dense>
       <template v-for="item in items">
         <v-row

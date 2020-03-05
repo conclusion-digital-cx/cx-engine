@@ -1,6 +1,6 @@
 import List from './List.vue'
 import Grid from './Grid.vue'
-import Form from './form'
+import Form from './form.vue'
 
 export default [
   {

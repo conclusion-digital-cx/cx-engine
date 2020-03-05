@@ -1,8 +1,18 @@
 
 <script>
-import InputRelation from './components/InputRelation'
+import InputRelation from './components/InputRelation.vue'
 import TYPES from './TYPES'
-import { ROW_KEY } from '@/config'
+import TYPES_FORM from './TYPES_FORM'
+// import { ROW_KEY } from '@/config'
+
+const createLookup = (arr = [], key = '_id') => {
+  const lookup = {}
+  arr.forEach(elem => {
+    const k = elem[key]
+    lookup[k] = elem
+  })
+  return lookup
+}
 
 export default {
   components: {
@@ -20,6 +30,8 @@ export default {
     loading: false,
     dialog: false,
     TYPES,
+    TYPES_FORM,
+    TYPES_LOOKUP: createLookup(TYPES, 'value'),
     form: {
       // key: ROW_KEY,
       // collectionName: '',
@@ -33,8 +45,14 @@ export default {
   }),
 
   computed: {
+    _defaultPrimaryKey () {
+      return this.$store.state.settings.defaultPrimaryKey
+    },
+
     _id () {
-      return this.form[ROW_KEY] || this.form['_id']
+      return this.form[this._defaultPrimaryKey] ||
+        // this.form[ROW_KEY] ||
+        this.form['_id']
     },
 
     breadcrumbs () {
@@ -192,14 +210,19 @@ export default {
     // ===================
 
     // Force recreate table
-    async createTable () {
+    async createTable (form) {
       try {
         this.loading = true
         // const resp = await fetch(`/api/collections/${this.name}/create`, {
-        const resp = await this.$service.fetch(`/_tasks/create/${this.name}`, {
-          method: 'GET'
-          // body: JSON.stringify(form)
+        // await this.$service.fetch(`/_tasks/create/${this.name}`, {
+        //   method: 'GET'
+        //   // body: JSON.stringify(form)
+        // })
+        await this.$service.fetch(`/_tasks/create/${this.name}`, {
+          method: 'POST',
+          body: JSON.stringify(form)
         })
+
         this.$emit('success')
       } finally {
         this.loading = false
@@ -212,8 +235,8 @@ export default {
     async dropTable () {
       try {
         this.loading = true
-        // const resp = await fetch(`/api/collections/${this.name}/create`, {
-        const resp = await this.$service.fetch(`/_tasks/drop/${this.name}`, {
+        // await fetch(`/api/collections/${this.name}/create`, {
+        await this.$service.fetch(`/_tasks/drop/${this.name}`, {
           method: 'GET'
           // body: JSON.stringify(form)
         })
@@ -241,7 +264,7 @@ export default {
       <v-btn
         class="mx-2"
         :loading="loading"
-        @click="createTable"
+        @click="createTable(form)"
       >
         create table
       </v-btn>
@@ -346,17 +369,18 @@ export default {
                       v-model="item.type"
                       label="Type"
                       :items="TYPES"
+                      :hint="`Database type: ${ TYPES_LOOKUP[item.type].type }`"
                     />
 
+                    <!-- <small>
+                      Database type: {{ TYPES_LOOKUP[item.type].type }}
+                    </small> -->
                     <!-- Form only options -->
                     <!-- <v-select
                       v-model="item.formType"
                       class="ml-3"
                       label="Form type"
-                      :items="[
-                        { text: 'number', value: 'number' },
-                        { text: 'date', value: 'date' }
-                      ]"
+                      :items="TYPES_FORM"
                     /> -->
                   </div>
 

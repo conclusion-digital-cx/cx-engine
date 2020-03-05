@@ -30,7 +30,10 @@ export default {
       >
         {{ title }}
         <v-spacer />
-        <v-btn icon @click="close()">
+        <v-btn
+          icon
+          @click="close()"
+        >
           <v-icon>close</v-icon>
         </v-btn>
       </v-card-title>

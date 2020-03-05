@@ -1,20 +1,21 @@
 import Vue from 'vue'
+// import Vue from 'https://cdn.jsdelivr.net/npm/vue@2.6.11/dist/vue.esm.browser.js'
 import App from './App.vue'
 import router from './router'
-import store from './store'
+import store from './store/index'
 
 // Load common components
-import './components'
-import './layouts'
+import './components/register'
+import './layouts/index'
 
 import vuetify from './plugins/vuetify'
-import service from './service.js'
-import serviceFactory from './serviceFactory.js'
+import Service from './service.js'
+import ServiceFactory from './serviceFactory.js'
 
 //  Mixin service
 // TODO add in API ?
-Vue.prototype.$service = service(store.state.settings)
-Vue.prototype.$serviceFactory = serviceFactory(store.state.settings)
+Vue.prototype.$service = Service(store.state.settings)
+Vue.prototype.$serviceFactory = ServiceFactory(store.state.settings)
 
 // Vue.prototype.$snackbar = (msg) => {
 //     alert(msg)

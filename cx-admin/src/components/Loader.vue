@@ -8,7 +8,12 @@ export default {
 
 <template>
   <div>
-    <v-layout v-if="loading" justify-center align-center class="pa-4">
+    <v-layout
+      v-if="loading"
+      justify-center
+      align-center
+      class="pa-4"
+    >
       <v-progress-circular
         indeterminate
         :size="20"

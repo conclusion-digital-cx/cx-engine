@@ -3,13 +3,18 @@ export default {
   props: {
     value: { type: Boolean, default: false },
     persistent: { type: Boolean, default: false },
-    width: { type: String, default: "" }
+    width: { type: String, default: '' }
   }
-};
+}
 </script>
 
 <template>
-  <v-dialog :width="width" :value="value" :persistent="persistent" @input="$emit('input',$event)">
+  <v-dialog
+    :width="width"
+    :value="value"
+    :persistent="persistent"
+    @input="$emit('input',$event)"
+  >
     <Card class="theme--light mx-auto">
       <span class="card-title">
         <slot name="title" />

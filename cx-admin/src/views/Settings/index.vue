@@ -19,6 +19,12 @@
             label="Authorization header"
           />
 
+          <v-text-field
+            v-model="form.defaultPrimaryKey"
+            placeholder="E.g. for sql 'id' or mongodb '_id'"
+            label="Default primary key"
+          />
+
           <template v-if="form.useTypesFromJson">
             <v-textarea
               v-model="form.types"
@@ -102,15 +108,6 @@ export default {
     return {
       // api,
       form: this.$store.state.settings
-
-      // JSON.parse(window.localStorage.getItem('profile')) || {
-      //   headers: {
-      //     Authorization: ''
-      //   },
-      //   server: api.getBase(),
-      //   apiKey: api.getApiKey(),
-      //   types: window.localStorage.getItem('types')
-      // }
     }
   },
 
@@ -141,7 +138,6 @@ export default {
       console.log(form)
       // this.$store.dispatch('config', form)
       // api.setServer(form.server)
-      // api.setApiKey(form.apiKey)
 
       this.$store.commit('settings/set', form)
 

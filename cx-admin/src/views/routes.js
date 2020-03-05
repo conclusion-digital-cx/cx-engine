@@ -1,28 +1,50 @@
-import NotFound from './NotFound'
-
-// Plugins
-import pages from '../addons/pages/routes.js'
-import CollectionsName from './collections/_name'
+import NotFound from './NotFound.vue'
+import CollectionsName from './collections/_name.vue'
 import collections from './collections/routes.js'
-import media from '../addons/media/routes.js'
-import auth from './auth'
+// import media from '../addons/media/routes.js'
+import auth from './auth/index'
 // import roles from './roles'
 // import Home from './Home'
-import Settings from './Settings'
+import Settings from './Settings/index.vue'
 import types from './Types/index.js'
 import content from './content/index.js'
 // import List from './content/List'
 import roles from './roles/routes.js'
+
+// Plugins
+import pages from './pages/routes.js'
+import media from './media/routes.js'
 
 export default [
   ...auth,
   // { path: '/roles', component: roles },
   { path: '/', redirect: '/settings' },
   ...content,
-  { text: 'Themes', path: '/themes', component: CollectionsName, props: (route) => ({ name: 'themes' }) },
-  ...pages,
-  ...collections,
+
+  // TODO make pluginable
+  {
+    text: 'Themes',
+    path: '/themes',
+    component: CollectionsName,
+    props: (route) => ({ name: 'themes' })
+  },
   ...media,
+  // {
+  //   text: 'Media',
+  //   path: '/media',
+  //   component: CollectionsName,
+  //   props: (route) => ({ name: 'media' })
+  // },
+  {
+    text: 'blocks',
+    path: '/blocks',
+    component: CollectionsName,
+    props: (route) => ({ name: 'blocks' })
+  },
+  ...pages,
+
+  ...collections,
+  // ...media,
   ...types,
   ...roles,
   // { path: '/users', component: Collections_name, props: (route) => ({ name: "users" }) },

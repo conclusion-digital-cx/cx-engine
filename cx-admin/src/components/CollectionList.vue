@@ -1,5 +1,5 @@
 <script>
-import List from './List'
+import List from './List.vue'
 
 export default {
   components: {
@@ -75,7 +75,7 @@ export default {
       try {
         this.loading = true
         // const resp = await fetch(`/api/collections/${this.name}/create`, {
-        const resp = await fetch(`/api/collections/${this.name}/createfromjson`, {
+        await fetch(`/api/collections/${this.name}/createfromjson`, {
           method: 'GET'
           // body: JSON.stringify(form)
         })

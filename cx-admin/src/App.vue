@@ -1,6 +1,6 @@
 <template>
   <DefaultLayout>
-    <router-view />
+    <router-view :key="$route.fullPath" />
 
     <!-- <v-btn @click="$snackbar('he')" /> -->
     <AppSnackbar />
@@ -9,7 +9,7 @@
 
 <script>
 // Register all layouts
-import './layouts'
+import './layouts/index'
 
 export default {
   data: vm => ({

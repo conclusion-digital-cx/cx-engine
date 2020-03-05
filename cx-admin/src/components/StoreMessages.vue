@@ -1,13 +1,23 @@
 <template>
   <div>
-    <v-snackbar v-model="showSnackbar" :timeout="state.timeout" :color="state.color">
+    <v-snackbar
+      v-model="showSnackbar"
+      :timeout="state.timeout"
+      :color="state.color"
+    >
       {{ state.text }}
       <!-- <v-btn dark text @click.native="showSnackbar = false">Close</v-btn> -->
     </v-snackbar>
 
-    <v-dialog v-model="showDialog" width="500">
+    <v-dialog
+      v-model="showDialog"
+      width="500"
+    >
       <v-card>
-        <v-card-title class="headline" primary-title>
+        <v-card-title
+          class="headline"
+          primary-title
+        >
           {{ state.title }}
         </v-card-title>
 
@@ -24,7 +34,11 @@
 
         <v-card-actions>
           <v-spacer />
-          <v-btn color="primary" text @click="showDialog = false">
+          <v-btn
+            color="primary"
+            text
+            @click="showDialog = false"
+          >
             Ok
           </v-btn>
         </v-card-actions>

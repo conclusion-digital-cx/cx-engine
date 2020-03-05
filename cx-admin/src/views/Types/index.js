@@ -1,5 +1,5 @@
-import List from './List'
-import Form from './form'
+import List from './List.vue'
+import Form from './form.vue'
 
 export default [
   { path: '/typebuilder', component: List, props: true },

@@ -20,9 +20,9 @@ export default {
       on="on"
     >
       <v-btn
-        v-slot:activator="{on}"
         icon
         large
+        v-on="on"
       >
         <v-avatar
           size="32px"

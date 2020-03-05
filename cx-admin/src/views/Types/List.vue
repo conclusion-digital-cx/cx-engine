@@ -1,6 +1,6 @@
 
 <script>
-import Form from './components/Form'
+import Form from './components/Form.vue'
 import { ROW_KEY } from '@/config'
 
 export default {
@@ -24,6 +24,9 @@ export default {
   },
 
   computed: {
+    _defaultPrimaryKey () {
+      return this.$store.state.settings.defaultPrimaryKey
+    },
     breadcrumbs () {
       return [
         {
@@ -42,8 +45,9 @@ export default {
       try {
         this.loading = true
         const resp = await this.$service.getAll('types')
-        console.log(resp)
+        // console.log(resp)
         this.items = resp
+        return resp
       } finally {
         this.loading = false
       }
@@ -134,6 +138,45 @@ export default {
       }
     },
 
+    /** Selection actions */
+    async showInNav (selection) {
+      this.setToAll(elem => ({
+        ...elem,
+        showInNavigation: true
+      }), selection)
+    },
+
+    async hideInNav (selection) {
+      this.setToAll(elem => ({
+        ...elem,
+        showInNavigation: false
+      }), selection)
+    },
+
+    async setToAll (map, selection = []) {
+      try {
+        this.loading = true
+        const service = this.$serviceFactory('types')
+
+        const promises = selection.map(async elem => {
+          const newItem = map(elem)
+          await service.putById(elem[this._defaultPrimaryKey], newItem)
+        })
+
+        await Promise.all(promises)
+        // TODO for now reload
+        const resp = await this.fetch()
+        // Update selection state
+        this.$store.commit('types/set', resp)
+        console.log(resp)
+      } catch (err) {
+        console.warn(err)
+        this.$snackbar('Something went wrong')
+      } finally {
+        this.loading = false
+      }
+    },
+
     getAttributes (item) {
       const obj = item.attributes || []
       // return Object.entries(obj).map(([key, value]) => ({
@@ -165,6 +208,23 @@ export default {
           <v-btn
             outlined
             class="mx-1"
+            :loading="loading"
+            @click="showInNav(selection)"
+          >
+            Show in menu
+          </v-btn>
+          <v-btn
+            outlined
+            class="mx-1"
+            :loading="loading"
+            @click="hideInNav(selection)"
+          >
+            Hide in menu
+          </v-btn>
+          <v-btn
+            outlined
+            class="mx-1"
+            :loading="loading"
             @click="clickAutodetect(selection)"
           >
             Autodetect
@@ -185,12 +245,14 @@ export default {
         item-key="name"
         @click:row="rowClick"
       >
-        <template #item.fields="{value, item}">
+        <template
+          #item.fields="{value, item}"
+        >
           {{ item.attributes ? item.attributes.length : '?' }} field(s)
         </template>
-        <template #item.actions="{value, item}">
+        <!-- <template #item.actions="{value, item}">
           <v-switch hide-details />
-        </template>
+        </template> -->
       </v-data-table>
 
       <!-- {{ items }} -->
@@ -210,7 +272,7 @@ export default {
             {{ item.attributes ? item.attributes.length : '?' }} field(s)
           </v-flex>
         </v-layout>
-      </v-list-item> -->
+      </v-list-item>-->
     </v-card>
   </v-container>
 </template>

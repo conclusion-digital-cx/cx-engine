@@ -3,6 +3,24 @@ const queryParams = params => Object.keys(params)
   .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(params[k]))
   .join('&')
 
+const fetchWithTimeout = (url, options, timeout = 2000) => {
+  return Promise.race([
+    fetch(url, options),
+    new Promise((resolve, reject) =>
+      setTimeout(() => reject(new Error('timeout')), timeout)
+    )
+  ])
+}
+
+// Throw error on non 200 responses
+const fetchStatusHandler = (response) => {
+  if (response.status === 200) {
+    return response
+  } else {
+    throw new Error(response.statusText)
+  }
+}
+
 export default (config = {}) =>
   (name) => {
     return {
@@ -13,7 +31,7 @@ export default (config = {}) =>
         } = config
         // console.log(config)
 
-        return fetch(`${server}${path}`, {
+        return fetchWithTimeout(`${server}${path}`, {
           ...options,
           headers: {
             'Content-Type': 'application/json',
@@ -23,6 +41,7 @@ export default (config = {}) =>
           //   Authorization: `Bearer ${window.localStorage.getItem('token')}`
           // }
         })
+          .then(fetchStatusHandler)
           .then(resp => resp.json())
       },
 
@@ -49,7 +68,6 @@ export default (config = {}) =>
         const resp = await this.fetch(`/${name}?${queryParams(options)}`, {
           method: 'GET'
         })
-        console.log(resp)
 
         // FAKE
         return {
@@ -67,6 +85,8 @@ export default (config = {}) =>
 
       // Mixed
       createOrUpdateById (id = null, form = {}) {
+        delete form._id
+
         return id
           ? this.updateById(id, form)
           : this.insert(form)
@@ -74,6 +94,8 @@ export default (config = {}) =>
 
       // POST /:entity
       insert (form = {}) {
+        delete form._id
+
         return this.fetch(`/${name}`, {
           method: 'POST',
           body: JSON.stringify(form)
@@ -82,6 +104,8 @@ export default (config = {}) =>
 
       // PATCH /:entity/:id
       updateById (id, form = {}) {
+        delete form._id
+
         return this.fetch(`/${name}/${id}`, {
           method: 'PATCH',
           body: JSON.stringify(form)
@@ -90,6 +114,8 @@ export default (config = {}) =>
 
       // PUT /:entity/:id
       putById (id, form = {}) {
+        delete form._id
+
         return this.fetch(`/${name}/${id}`, {
           method: 'PATCH',
           body: JSON.stringify(form)

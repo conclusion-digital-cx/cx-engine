@@ -1,5 +1,5 @@
-/uploads
-/themes/*
-!/themes/2020
+/public_html/uploads/*
+/public_html/themes/*
+!/public_html/themes/2020
 config.php
 /storage

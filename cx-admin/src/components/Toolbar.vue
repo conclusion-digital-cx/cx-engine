@@ -1,5 +1,5 @@
 <script>
-import TheProfileMenu from "./TheProfileMenu";
+import TheProfileMenu from './TheProfileMenu.vue'
 
 export default {
   components: {
@@ -7,18 +7,23 @@ export default {
   },
   props: {
     value: Boolean,
-    title: { type: String, default: "" }
+    title: { type: String, default: '' }
   },
   methods: {
-    toggle() {
-      this.$emit("input", !this.value);
+    toggle () {
+      this.$emit('input', !this.value)
     }
   }
-};
+}
 </script>
 
 <template>
-  <v-app-bar clipped-left dense app color="deep-purple accent-4">
+  <v-app-bar
+    clipped-left
+    dense
+    app
+    color="deep-purple accent-4"
+  >
     <v-app-bar-nav-icon @click.stop="toggle()">
       <v-icon>menu</v-icon>
     </v-app-bar-nav-icon>
@@ -29,7 +34,11 @@ export default {
 
     <v-spacer />
 
-    <v-btn target="_blank" href="/" text>
+    <v-btn
+      target="_blank"
+      href="/"
+      text
+    >
       <v-icon>mdi-export-variant</v-icon>To site
     </v-btn>
 

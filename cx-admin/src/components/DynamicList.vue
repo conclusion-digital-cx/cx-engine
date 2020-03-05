@@ -73,7 +73,12 @@ export default {
             <!-- Editable -->
             <template v-else>
               <v-col xs4>
-                <v-text-field v-model="item.name" label="Name" placeholder="Add new field" hide-details />
+                <v-text-field
+                  v-model="item.name"
+                  label="Name"
+                  placeholder="Add new field"
+                  hide-details
+                />
               </v-col>
               <v-col cols="6">
                 <!-- <v-select v-model="item.params.type" label="Type" :items="TYPES" /> -->
@@ -82,10 +87,17 @@ export default {
             </template>
 
             <v-col xs2>
-              <v-btn icon class="hide-by-default" @click="toggleEdit(item)">
+              <v-btn
+                icon
+                class="hide-by-default"
+                @click="toggleEdit(item)"
+              >
                 <v-icon>edit</v-icon>
               </v-btn>
-              <v-btn icon class="hide-by-default">
+              <v-btn
+                icon
+                class="hide-by-default"
+              >
                 <v-icon>close</v-icon>
               </v-btn>
             </v-col>
@@ -97,7 +109,11 @@ export default {
       </div>
     </template>
 
-    <v-btn class="ma-2" outlined @click="addField">
+    <v-btn
+      class="ma-2"
+      outlined
+      @click="addField"
+    >
       Add another field
     </v-btn>
   </div>

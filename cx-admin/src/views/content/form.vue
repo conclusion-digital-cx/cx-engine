@@ -1,8 +1,8 @@
 
 <script>
-import BaseDialog from '@/components/BaseDialog'
-import DynamicForm from './components/DynamicForm'
-import { ROW_KEY } from '@/config'
+import BaseDialog from '@/components/BaseDialog.vue'
+import DynamicForm from './components/DynamicForm.vue'
+// import { ROW_KEY } from '@/config'
 
 export default {
   components: {
@@ -29,11 +29,16 @@ export default {
   },
 
   computed: {
+    _defaultPrimaryKey () {
+      return this.$store.state.settings.defaultPrimaryKey
+    },
+
     _name () {
       return this.typeSlug
     },
     _id () {
-      return this.form[this.type.key || ROW_KEY]
+      // return this.form[this.type.key || ROW_KEY]
+      return this.id
     },
     //= ===========
     // Flatten strapi structure
@@ -60,7 +65,7 @@ export default {
   methods: {
     async fetch () {
       // Fetch fields
-      const type = await this.fetchFields()
+      await this.fetchFields()
 
       // Fetch data
       if (this.id) {
@@ -88,6 +93,7 @@ export default {
           params: {}
         // { populate: ['company', 'user'] }
         })
+        console.log(data)
 
         this.form = data
       } finally {
@@ -103,13 +109,11 @@ export default {
 
     async deleteItem (form) {
       try {
-        const resp = await this.$serviceFactory(this.typeSlug)
-          .delete(`/${this.typeSlug}/${form[this.type.key || ROW_KEY]}`, form)
+        await this.$serviceFactory(this.typeSlug)
+          .deleteById(form[this.type.key || this._defaultPrimaryKey], form)
         this.$router.push(`/content/${this.typeSlug}`)
       } catch (err) {
         console.warn(err)
-      } finally {
-
       }
     },
 
@@ -148,19 +152,19 @@ export default {
   <div>
     <!-- {{ props }} -->
     <BaseDialog
-      :title="`Add / edit ${_name} (#${_id})`"
+      :title="`Add / edit ${_name}`"
       :value="true"
       @input="$router.push(`/content/${_name}`)"
     >
+      <small>#${{ _id }}</small>
       <v-form
         ref="form"
         @submit.prevent="validate(form)"
       >
         <!-- {{ _fields }} -->
         <DynamicForm
-          :value="true"
+          v-model="form"
           :fields="_fields"
-          :form="form"
         />
       </v-form>
       <!-- {{ form }} -->

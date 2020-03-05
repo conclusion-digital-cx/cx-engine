@@ -2,7 +2,7 @@
 import axios from 'axios'
 
 // URL and endpoint constants
-const API_URL = '' // ConfigService.get('api')
+// const API_URL = '' // ConfigService.get('api')
 const LOGIN_URL = `/login`
 const SIGNUP_URL = `/users`
 const localStorage = window.localStorage
@@ -93,7 +93,7 @@ export const AuthService = {
   // The object to be passed as a header for authenticated requests
   getAuthHeader () {
     return {
-      'Authorization': 'Bearer ' + localStorage.getItem('access_token')
+      Authorization: 'Bearer ' + localStorage.getItem('access_token')
     }
   }
 }

@@ -1,1 +1,0 @@
-Single page app CMS backend

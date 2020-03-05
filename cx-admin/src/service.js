@@ -3,6 +3,15 @@ const queryParams = params => Object.keys(params)
   .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(params[k]))
   .join('&')
 
+// Throw error on non 200 responses
+const fetchStatusHandler = (response) => {
+  if (response.status === 200) {
+    return response
+  } else {
+    throw new Error(response.statusText)
+  }
+}
+
 export default (config = {}) => ({
   // setBearerToken (token) {
   //   authHeader = `Bearer ${token}`
@@ -19,7 +28,7 @@ export default (config = {}) => ({
     return fetch(`${server}${path}`, {
       ...options,
       headers: {
-        'Content-Type': 'application/json',
+        // 'Content-Type': 'application/json',
         ...headers
       }
       // headers
@@ -27,6 +36,7 @@ export default (config = {}) => ({
       //   Authorization: `Bearer ${window.localStorage.getItem('token')}`
       // }
     })
+      .then(fetchStatusHandler)
   },
 
   fetch (path, options = { method: 'GET' }) {
@@ -51,7 +61,7 @@ export default (config = {}) => ({
     const schema = await this.getCollectionByName(name)
       .then(resp => resp.schemaJson)
     const arr = Object.entries(schema)
-    console.log(arr)
+    // console.log(arr)
     const entries = arr.map(([key, value]) => ({
       name: key,
       ...value
@@ -83,14 +93,14 @@ export default (config = {}) => ({
     const respRaw = await this.fetchRaw(`/${name}?${queryParams(options)}`, {
       method: 'GET'
     })
-    console.log(respRaw)
+    // console.log(respRaw)
 
     const resp = await respRaw.json()
     const totalItems = respRaw.headers.get('X-Total-Count') || 999
+    // X-Total-Count is a special headers, make sure CORS accepts this header
 
-    respRaw.headers.forEach(function (val, key) { console.log(key + ' -> ' + val) })
-
-    console.log(resp, totalItems)
+    // respRaw.headers.forEach(function (val, key) { console.log(key + ' -> ' + val) })
+    // console.log(resp, totalItems)
 
     // FAKE
     return {

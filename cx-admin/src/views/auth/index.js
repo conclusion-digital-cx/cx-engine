@@ -1,18 +1,19 @@
-import Forgot from './Forgot'
-import ForgotCheck from './ForgotCheck'
-import Login from './Login'
-import Create from './Create'
-import Logout from './Logout'
-import Reset from './Reset'
+import Forgot from './Forgot.vue'
+import ForgotCheck from './ForgotCheck.vue'
+import Login from './Login.vue'
+import Create from './Create.vue'
+import Logout from './Logout.vue'
+import Reset from './Reset.vue'
 
 export default [
   {
-    path: '/login', component: Login, 
+    path: '/login',
+    component: Login,
     meta: {
       layout: 'LoginLayout',
-      public: true,  // Allow access to even if not logged in
+      public: true, // Allow access to even if not logged in
       onlyWhenLoggedOut: true
-    }, 
+    },
     props: {
       redirectTo: '/selectcompany'
     }
