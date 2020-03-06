@@ -26,12 +26,12 @@ export default (config = {}) =>
     return {
       fetch (path, options = { method: 'GET' }) {
         const {
-          server = window.server || 'http://localhost:8666/api',
+          api = 'http://localhost:8666/api',
           headers = ''
         } = config
         // console.log(config)
 
-        return fetchWithTimeout(`${server}${path}`, {
+        return fetchWithTimeout(`${api}${path}`, {
           ...options,
           headers: {
             'Content-Type': 'application/json',

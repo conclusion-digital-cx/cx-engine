@@ -5,7 +5,7 @@ export default {
     nature: { type: String, default: '' },
     target: { type: String, default: '' },
     targetColumnName: { type: String, default: 'name' },
-    key: { type: String, default: '_id' }
+    primaryKey: { type: String, default: '_id' }
   },
   data () {
     return {
@@ -41,15 +41,17 @@ export default {
     <!-- {{ items }} -->
     <!-- {{ target }} -->
     <!-- {{ value }} -->
+    <!-- {{ primaryKey }} -->
     <!-- {{ nature }} -->
     <!-- {{ $attrs }} -->
-    <v-select
+    <v-autocomplete
       :value="value"
       :loading="loading"
       v-bind="$attrs"
       :items="items"
+      clearable
       :multiple="nature === 'manyToOne'"
-      :item-value="key"
+      :item-value="primaryKey"
       :item-text="targetColumnName || 'name'"
       @input="$emit('input',$event)"
     />

@@ -1,14 +1,19 @@
 <?php
 
+/** 
+ * Service wrapper around Medoo to match json-server query specs
+ * https://github.com/typicode/json-server
+ * */
+
 require_once "Medoo.php";
 
 // Use as closure
-return function ($entity = '') {
-	$db = require_once(__DIR__ . "/../db.php");
+return function ($entity = '') use ($db) {
+	// TODO
+	// $db = require_once(APP . "/db.php");
 	return new Service($entity, $db);
 };
 
-/** Json server based service */
 class Service
 {
 	function __construct($entity = "", $db)
@@ -43,7 +48,10 @@ class Service
 		//     'groupBy', 'groupDesc', 'mustSort', 'multiSort'
 		// ];
 		$functionFields = [
-			'_start', '_limit'
+			'_start', 
+			'_limit',
+			'_embed',
+			'_expand'
 		];
 
 		// Helper function
@@ -76,11 +84,17 @@ class Service
 		// page=1&itemsPerPage=10&sortBy=&sortDesc=&groupBy=&groupDesc=&mustSort=false&multiSort=false
 		// $where['LIMIT'] = [$_GET['page'] * $_GET['itemsPerPage'], $_GET['itemsPerPage']];
 
+		// $join = [
+		// 	"[>]pages" => ["page" => "id"],
+		// ];
+		// TODO handle _embed / _expand
+		$join = [];
+
 		$db = $this->db;
 		// print_r($db);
 
 		try {
-			$rows = $db->select($entity, $fields, $where);
+			$rows = $db->select($entity, $join, $fields, $where);
 			if (!is_array($rows)) {
 				// return true;    // Table not exist...exit this route handler
 				throw new Exception("No rows");

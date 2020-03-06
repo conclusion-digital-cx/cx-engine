@@ -20,12 +20,12 @@ export default (config = {}) => ({
   // Raw
   fetchRaw (path, options = { method: 'GET' }) {
     const {
-      server = window.server || 'http://localhost:8666/api',
+      api = 'http://localhost:8666/api',
       headers = ''
     } = config
     // console.log(config)
 
-    return fetch(`${server}${path}`, {
+    return fetch(`${api}${path}`, {
       ...options,
       headers: {
         // 'Content-Type': 'application/json',

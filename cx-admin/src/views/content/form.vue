@@ -1,12 +1,12 @@
 
 <script>
 import BaseDialog from '@/components/BaseDialog.vue'
-import DynamicForm from './components/DynamicForm.vue'
+// import DynamicForm from '@/components/DynamicForm.vue'
 // import { ROW_KEY } from '@/config'
 
 export default {
   components: {
-    DynamicForm,
+    // DynamicForm,
     BaseDialog
   },
 
@@ -29,7 +29,7 @@ export default {
   },
 
   computed: {
-    _defaultPrimaryKey () {
+    _primaryKey () {
       return this.$store.state.settings.defaultPrimaryKey
     },
 
@@ -133,12 +133,13 @@ export default {
 
         this.$emit('success')
       } catch (err) {
-        alert('Ai, something went wrong', err)
+        this.$snackbar('Ai, something went wrong', err)
       } finally {
         this.loading = false
         // Close form
         // this.$emit('input', false)
 
+        this.$snackbar('Item saved')
         // Return to listing
         // this.$router.push(`/content/${this.typeSlug}/${this.typeId}`)
       }
@@ -165,6 +166,7 @@ export default {
         <DynamicForm
           v-model="form"
           :fields="_fields"
+          :primary-key="_primaryKey"
         />
       </v-form>
       <!-- {{ form }} -->

@@ -12,6 +12,7 @@ export default {
   props: {
     name: { type: String, default: 'collections' },
 
+    primaryKey: { type: String, default: '_id' },
     title: { type: String, default: 'No title' },
     value: {
       type: Object,
@@ -87,6 +88,8 @@ export default {
           autocomplete="new-password"
           :label="field.label || field.name"
           v-bind="field"
+          clearable
+
           :rules="getRules(field.rules)"
         />
       </template>
@@ -97,6 +100,8 @@ export default {
           v-model="options[field.name]"
           :label="field.label || field.name"
           v-bind="field"
+          clearable
+
           :rules="getRules(field.rules)"
           type="number"
         />
@@ -108,6 +113,8 @@ export default {
           v-model="options[field.name]"
           :label="field.label || field.name"
           v-bind="field"
+          clearable
+
           :rules="getRules(field.rules)"
         />
       </template>
@@ -127,6 +134,19 @@ export default {
           v-model="options[field.name]"
           :label="field.label || field.name"
           v-bind="field"
+          clearable
+          type="file"
+          :rules="getRules(field.rules)"
+        />
+      </template>
+
+      <!-- Image -->
+      <template v-else-if="field.type === 'avatar'">
+        <InputAvatar
+          v-model="options[field.name]"
+          :label="field.label || field.name"
+          v-bind="field"
+          clearable
           type="file"
           :rules="getRules(field.rules)"
         />
@@ -158,6 +178,7 @@ export default {
         <InputDate
           v-model="options[field.name]"
           v-bind="field"
+          clearable
           :label="field.label || field.name"
           :rules="getRules(field.rules)"
         />
@@ -168,6 +189,7 @@ export default {
         <InputDateTime
           v-model="options[field.name]"
           v-bind="field"
+          clearable
           :label="field.label || field.name"
           :rules="getRules(field.rules)"
         />
@@ -184,9 +206,11 @@ export default {
         /> -->
         <!-- {{ field }} -->
         <InputSelectRelation
-          v-model="options[field.name]"
+          :value="options[field.name]"
+          :primary-key="primaryKey"
           :label="field.label || field.name"
           v-bind="field"
+          @input="options[field.name] = $event || null"
         />
       </template>
 

@@ -27,7 +27,7 @@ const settings = {
     headers: {
       Authorization: ''
     },
-    server: urlParams.get('host') || '',
+    api: urlParams.get('api') || window.config.api,
     defaultPrimaryKey: urlParams.get('defaultPrimaryKey') || 'id'
   },
   mutations: {

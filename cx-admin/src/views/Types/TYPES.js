@@ -5,6 +5,7 @@ export default [
   { text: 'textarea', value: 'textarea', type: 'string' },
   { text: 'boolean', value: 'boolean', type: 'string' },
   { text: 'image', value: 'image', type: 'string' },
+  { text: 'avatar', value: 'avatar', type: 'string' },
   // { text: 'media', value: 'media', type: 'string' },
   { text: 'wysiwyg', value: 'wysiwyg', type: 'string' },
   { text: 'json', value: 'json', type: 'string' },

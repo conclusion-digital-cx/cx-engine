@@ -365,8 +365,9 @@ export default {
                 </v-col>
                 <v-col cols="6">
                   <div class="d-flex">
-                    <v-select
+                    <v-autocomplete
                       v-model="item.type"
+                      style="max-width:200px"
                       label="Type"
                       :items="TYPES"
                       :hint="`Database type: ${ TYPES_LOOKUP[item.type].type }`"

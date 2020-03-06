@@ -1,7 +1,9 @@
 <?php
 
 return function () {
-    return function($req, $res) {
+    return function($req, $res, $next) {
+        // exit("cool");
+
         // Access-Control headers are received during OPTIONS requests
         if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
             header('Access-Control-Allow-Origin: *');
@@ -16,6 +18,6 @@ return function () {
         header('Access-Control-Allow-Origin: *');
 
         // Proceed to next route
-        return true;
+        $next();
     };
 };

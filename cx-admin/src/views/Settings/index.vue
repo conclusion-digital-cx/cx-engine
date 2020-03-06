@@ -9,7 +9,7 @@
       <v-card-text>
         <v-form @submit.prevent="submit(form)">
           <v-text-field
-            v-model="form.server"
+            v-model="form.api"
             label="Server"
           />
 
