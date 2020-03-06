@@ -3,7 +3,7 @@
 // Handle File based pages
 // Map /* to file at /views/*.php
 $router->use(function ($req, $res, $next) {
-    $path = $req->path;
+    $path = rtrim($req->path, "/"); // Remove trailing /
 
     $file = APP . "/views$path.php";
     $exists = file_exists($file);
@@ -12,7 +12,7 @@ $router->use(function ($req, $res, $next) {
             'main' => ['file' => $file]
         ];
         $theme = CONFIG['theme'];
-        $layout = $slots['layout'] ?: "./themes/{$theme}/index.php";
+        $layout = $slots['layout'] ?: APP."/themes/{$theme}/index.php";
         $res->render($layout, $slots);
     } else {
         $next();

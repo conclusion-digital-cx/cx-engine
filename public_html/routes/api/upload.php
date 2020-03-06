@@ -1,5 +1,7 @@
 <?php
 
+$base = "/api";
+
 // Get Config
 $uploaddir = $config->uploaddir;
 
@@ -7,7 +9,7 @@ $uploaddir = $config->uploaddir;
 // Image upload
 // ******
 
-$router->post('/upload', function () use ($db, $uploaddir) {
+$router->post("{$base}/upload", function () use ($db, $uploaddir) {
     $fileToUpload = $_FILES["fileToUpload"];
     $targetDirectory = $uploaddir; // "../uploads/";
     // print_r($_FILES);

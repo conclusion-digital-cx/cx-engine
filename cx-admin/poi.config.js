@@ -7,7 +7,7 @@ module.exports = {
       font: 'assets/[path][name].[ext]',
       image: 'assets/[path][name].[ext]'
     },
-    dir: '../admin',
+    dir: '../public_html/admin',
     publicUrl: './' // Make sure it works on GH pages
   },
   // merged using `webpack-merge` module

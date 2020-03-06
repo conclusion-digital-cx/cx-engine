@@ -15,56 +15,34 @@ include __DIR__ . '/lib/Express.php';
 $app = new Express();
 $router = new Router();
 
+$app->set('basePath', '');
+
+/**
+ * Simple helper to debug to the console
+ *
+ * @param $data object, array, string $data
+ * @param $context string  Optional a description.
+ *
+ * @return string
+ */
+function d($data, $context = 'Debug in Console')
+{
+	// Buffering to solve problems frameworks, like header() in this and not a solid return.
+	ob_start();
+
+	$output = "";
+	// $output  = 'console.info(\'' . $context . ':\');';
+	$output .= 'console.log(' . json_encode($data) . ');';
+	$output  = sprintf('<script>%s</script>', $output);
+
+	echo $output;
+}
+
 // ==========
 // Custom View engine
 // ==========
-class CxTemplate {
-    function render($view, $slots = []) {
-        global $db, $service;
-        /**
-		 * Template Helpers
-		 */
-		$asset = function ($dir = '') {
-			return str_replace(APP, "", $dir);
-		};
-		// $service = function ($entity = '') {
-		// 	// $cx = getCx();
-		// 	// return new Service($entity, $cx->db);
-		// };
-		// $db = getCx()->db;
-
-		$slot = function ($name) use ($slots) {
-			$scope = isset($slots[$name]) ? $slots[$name] : null;
-			// echo $name;
-			// getCx()->debug($scope);
-
-			if(is_string($scope)) {
-				echo $scope;
-			} else {
-				$type = $scope[0];
-				// getCx()->debug($type);
-
-				// ['file' => 'view.php']
-				if($scope['file']) {
-					include $scope['file'];
-				}
-
-				// ['file', 'view.php']
-				if($type === 'file') {
-					include $scope[1];
-				}
-				echo isset($scope[$name]) ? $scope[$name] : '';
-			}
-        };
-        
-        $region = $slot;
-
-        include $view;
-    }
-}
-
+include __DIR__ . '/lib/CxTemplate.php';
 $app->set('view_engine',new CxTemplate());
-
 
 // ==========
 // Setup Database connection 
@@ -92,7 +70,10 @@ $router->use($corsMiddleware());
 // Global closure
 $service = require_once("./lib/Service.php");
 
+// Web
 require_once "routes/web.php";
+
+// API , IMPORTANT currently no authentication, disable in production !!!!!!!!!!!
 require_once "routes/api.php";
 
 // If all fails
@@ -100,8 +81,7 @@ $router->use(function ($req, $res, $next) use ($app, $router) {
     // echo "$app->method $app->current\n";
     // $matches = $app->match($router);
     // print_r($matches);
-
-    $res->status(400)->send("Not found");
+    $res->status(400)->send("Not found: $req->path");
 });
 
 // ==========

@@ -108,50 +108,14 @@ class Express
         'cache_dir'        => '/tmp'
     );
 
+    public $basePath;
+
     /**
      * Gets the info of the current request
      */
     public function __construct()
     {
-        $getRequestUrl = function () {
-            // Get requestUrl from $_SERVER['REQUEST_URI']
-            $requestUrl = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '';
 
-            // // strip base path from request url
-            // $requestUrl = substr($requestUrl, strlen($this->basePath));
-
-            // Strip query string (?a=b) from Request Url
-            if (($strpos = strpos($requestUrl, '?')) !== false) {
-                $requestUrl = substr($requestUrl, 0, $strpos);
-            }
-            return $requestUrl;
-        };
-
-        // Old
-        $requestUri = $getRequestUrl();
-        // Without trailing /
-        $this->requestUri = $getRequestUrl();
-        // With trailing /
-        $this->current = $this->parse((isset($requestUri)) ? $requestUri : '/');
-        $this->method = $_SERVER['REQUEST_METHOD'];
-        $this->headers = apache_request_headers();
-        $this->cookies = (object) $_COOKIE;
-        $this->locals = new \stdClass;
-
-        // Get the querystring, remove the route from it
-        $querystring = isset($_SERVER['QUERY_STRING']) ? $_SERVER['QUERY_STRING'] : "";
-        parse_str($querystring, $result);
-        unset($result['route']);
-        $this->query = (object) $result;
-
-        // Obtain the request body
-        if (count($_POST) > 0) {
-            // Classic POST
-            $this->body = (object) $_POST;
-        } else {
-            // JSON POST
-            $this->body = json_decode(file_get_contents('php://input'));
-        }
         // switch ($this->method) {
         //     case 'POST':
         //         // TODO: Better check for POST data
@@ -215,7 +179,7 @@ class Express
      */
     public function set($setting, $value)
     {
-        return $this->setting($setting, $value);
+        return $this->get($setting, $value);
     }
 
     /**
@@ -225,10 +189,10 @@ class Express
      * @param string The value of the setting
      * @return string
      */
-    public function setting($setting, $value = '')
+    public function get($setting, $value = '')
     {
         // View Engine -> view_engine
-        $setting = strtolower(str_replace(' ', '_', $setting));
+        // $setting = strtolower(str_replace(' ', '_', $setting));
 
         if ($value != '') {
             $this->settings[$setting] = $value;
@@ -318,6 +282,61 @@ class Express
      */
     public function listen($router)
     {
+
+        $getRequestUrl = function ($basePath) {
+            // Get requestUrl from $_SERVER['REQUEST_URI']
+            $requestUrl = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '';
+
+            // strip base path from request url
+            $requestUrl = substr($requestUrl, strlen($basePath));
+
+            // Strip query string (?a=b) from Request Url
+            if (($strpos = strpos($requestUrl, '?')) !== false) {
+                $requestUrl = substr($requestUrl, 0, $strpos);
+            }
+            return $requestUrl;
+        };
+
+        $getHeaders = function () {
+            $headers = array();
+            foreach ($_SERVER as $k => $v) {
+                if (substr($k, 0, 5) == "HTTP_") {
+                    $k = str_replace('_', ' ', substr($k, 5));
+                    $k = str_replace(' ', '-', ucwords(strtolower($k)));
+                    $headers[$k] = $v;
+                }
+            }
+            return $headers;
+        };
+
+        $requestUri = $getRequestUrl($this->get('basePath'));
+        // Without trailing /
+        $this->requestUri = $requestUri;
+        // With trailing /
+        $this->current = $this->parse((isset($requestUri)) ? $requestUri : '/');
+        $this->method = $_SERVER['REQUEST_METHOD'];
+        $this->headers = $getHeaders();
+        $this->cookies = (object) $_COOKIE;
+        $this->locals = new \stdClass;
+
+        // Get the querystring, remove the route from it
+        $querystring = isset($_SERVER['QUERY_STRING']) ? $_SERVER['QUERY_STRING'] : "";
+        parse_str($querystring, $result);
+        unset($result['route']);
+        $this->query = (object) $result;
+
+        // Obtain the request body
+        if (count($_POST) > 0) {
+            // Classic POST
+            $this->body = (object) $_POST;
+        } else {
+            // JSON POST
+            $this->body = json_decode(file_get_contents('php://input'));
+        }
+
+
+
+
         $matches = $this->match($router);
         // print_r($matches);
 
