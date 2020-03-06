@@ -60,7 +60,7 @@ $db = new Medoo($config->db);
 // ==========
 // app routes...
 // ==========
-$corsMiddleware = include("./middleware/cors.php");
+$corsMiddleware = include(__DIR__ ."/middleware/cors.php");
 $router->use($corsMiddleware());
 
 // $router->get("/",function ($req, $res, $next) {
@@ -68,7 +68,7 @@ $router->use($corsMiddleware());
 // });
 
 // Global closure
-$service = require_once("./lib/Service.php");
+$service = require_once(__DIR__ ."/lib/Service.php");
 
 // Web
 require_once "routes/web.php";
