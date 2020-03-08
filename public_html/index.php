@@ -12,31 +12,12 @@ error_reporting(E_ALL & ~E_NOTICE);
 
 include __DIR__ . '/lib/Express.php';
 
+// Create App
 $app = new Express();
 $router = new Router();
 
+// Setup basePath
 $app->set('basePath', '');
-
-/**
- * Simple helper to debug to the console
- *
- * @param $data object, array, string $data
- * @param $context string  Optional a description.
- *
- * @return string
- */
-function d($data, $context = 'Debug in Console')
-{
-	// Buffering to solve problems frameworks, like header() in this and not a solid return.
-	ob_start();
-
-	$output = "";
-	// $output  = 'console.info(\'' . $context . ':\');';
-	$output .= 'console.log(' . json_encode($data) . ');';
-	$output  = sprintf('<script>%s</script>', $output);
-
-	echo $output;
-}
 
 // ==========
 // Custom View engine
@@ -57,24 +38,17 @@ if (!$config->db) {
 // Initialize ORM
 $db = new Medoo($config->db);
 
-// ==========
-// app routes...
-// ==========
-$corsMiddleware = include(__DIR__ ."/middleware/cors.php");
-$router->use($corsMiddleware());
+// Global closure ?
+// $service = require_once(__DIR__ ."/lib/Service.php");
 
-// $router->get("/",function ($req, $res, $next) {
-//     $res->send("Cool");
-// });
-
-// Global closure
-$service = require_once(__DIR__ ."/lib/Service.php");
-
-// Web
-require_once "routes/web.php";
-
-// API , IMPORTANT currently no authentication, disable in production !!!!!!!!!!!
-require_once "routes/api.php";
+// =============
+// Handle autoloaded plugins
+// =============
+$autoload = $config->autoload;
+foreach($autoload as $key => $value) {
+    $directory = is_array($value) ? $key : $value;
+    include __DIR__."/plugins/$directory/index.php";
+}
 
 // If all fails
 $router->use(function ($req, $res, $next) use ($app, $router) {
