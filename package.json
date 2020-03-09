@@ -1,10 +1,12 @@
 {
   "name": "cx-engine",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "A simple PHP based CMS",
   "main": "index.js",
   "scripts": {
-    "start": "php -S localhost:8666"
+    "start": "cd public_html && php -S localhost:8666",
+    "dev": "browser-sync start --port 5000 --proxy 'localhost:8666' --files './'",
+    "docs": "browser-sync docs -w"
   },
   "keywords": [],
   "author": "",

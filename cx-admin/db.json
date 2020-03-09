@@ -1,0 +1,883 @@
+{
+  "types": [
+    {
+      "_id": 1,
+      "name": "permission",
+      "description": "",
+      "mainField": "",
+      "connection": "default",
+      "collectionName": "users-permissions_permission",
+      "attributes": [
+        {
+          "name": "type",
+          "params": {
+            "type": "string",
+            "required": true,
+            "configurable": false
+          }
+        },
+        {
+          "name": "controller",
+          "params": {
+            "type": "string",
+            "required": true,
+            "configurable": false
+          }
+        },
+        {
+          "name": "action",
+          "params": {
+            "type": "string",
+            "required": true,
+            "configurable": false
+          }
+        },
+        {
+          "name": "enabled",
+          "params": {
+            "type": "boolean",
+            "required": true,
+            "configurable": false
+          }
+        },
+        {
+          "name": "policy",
+          "params": {
+            "type": "string",
+            "configurable": false
+          }
+        },
+        {
+          "name": "role",
+          "params": {
+            "plugin": "users-permissions",
+            "configurable": false,
+            "target": "role",
+            "key": "permissions",
+            "nature": "manyToOne",
+            "targetColumnName": ""
+          }
+        }
+      ]
+    },
+    {
+      "_id": 2,
+      "name": "role",
+      "description": "",
+      "mainField": "",
+      "connection": "default",
+      "collectionName": "users-permissions_role",
+      "attributes": [
+        {
+          "name": "name",
+          "params": {
+            "type": "string",
+            "minLength": 3,
+            "required": true,
+            "configurable": false
+          }
+        },
+        {
+          "name": "description",
+          "params": {
+            "type": "string",
+            "configurable": false
+          }
+        },
+        {
+          "name": "type",
+          "params": {
+            "type": "string",
+            "unique": true,
+            "configurable": false
+          }
+        },
+        {
+          "name": "permissions",
+          "params": {
+            "plugin": "users-permissions",
+            "configurable": false,
+            "isVirtual": true,
+            "target": "permission",
+            "key": "role",
+            "nature": "oneToMany",
+            "targetColumnName": ""
+          }
+        },
+        {
+          "name": "users",
+          "params": {
+            "configurable": false,
+            "plugin": "users-permissions",
+            "isVirtual": true,
+            "target": "users",
+            "key": "role",
+            "nature": "oneToMany",
+            "targetColumnName": ""
+          }
+        }
+      ]
+    },
+    {
+      "_id": 3,
+      "name": "users",
+      "description": "",
+      "mainField": "",
+      "connection": "default",
+      "collectionName": "users-permissions_user",
+      "attributes": [
+        {
+          "name": "username",
+          "params": {
+            "type": "string",
+            "minLength": 3,
+            "unique": true,
+            "configurable": false,
+            "required": true
+          }
+        },
+        {
+          "name": "email",
+          "params": {
+            "type": "email",
+            "minLength": 6,
+            "configurable": false,
+            "required": true
+          }
+        },
+        {
+          "name": "provider",
+          "params": {
+            "type": "string",
+            "configurable": false
+          }
+        },
+        {
+          "name": "password",
+          "params": {
+            "type": "password",
+            "minLength": 6,
+            "configurable": false,
+            "private": true
+          }
+        },
+        {
+          "name": "resetPasswordToken",
+          "params": {
+            "type": "string",
+            "configurable": false,
+            "private": true
+          }
+        },
+        {
+          "name": "confirmed",
+          "params": {
+            "type": "boolean",
+            "default": false,
+            "configurable": false
+          }
+        },
+        {
+          "name": "blocked",
+          "params": {
+            "type": "boolean",
+            "default": false,
+            "configurable": false
+          }
+        },
+        {
+          "name": "role",
+          "params": {
+            "plugin": "users-permissions",
+            "configurable": false,
+            "target": "role",
+            "key": "users",
+            "nature": "manyToOne",
+            "targetColumnName": ""
+          }
+        }
+      ]
+    },
+    {
+      "attributes": [
+        {
+          "name": "name",
+          "editable": true,
+          "params": {
+            "type": "string"
+          },
+          "type": "string"
+        },
+        {
+          "name": "createdAt",
+          "editable": true,
+          "params": {
+            "type": "date"
+          },
+          "type": "datetime"
+        }
+      ],
+      "_id": 4,
+      "name": "materials"
+    },
+    {
+      "attributes": [
+        {
+          "name": "name",
+          "params": {
+            "type": "string",
+            "minLength": 3,
+            "unique": true,
+            "configurable": false,
+            "required": true,
+            "clearable": true
+          }
+        },
+        {
+          "name": "limsMaterialName",
+          "params": {
+            "type": "string",
+            "clearable": true
+          }
+        },
+        {
+          "name": "email",
+          "params": {
+            "label": "Email",
+            "type": "string",
+            "clearable": true,
+            "rules": [
+              "required",
+              "email"
+            ]
+          }
+        },
+        {
+          "name": "amount",
+          "params": {
+            "label": "Amount",
+            "type": "number",
+            "clearable": true,
+            "rules": [
+              "required"
+            ]
+          }
+        }
+      ],
+      "name": "messages",
+      "_id": 6
+    },
+    {
+      "attributes": [
+        {
+          "name": "key",
+          "editable": true,
+          "params": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "translation",
+          "editable": true,
+          "params": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "language",
+          "editable": true,
+          "params": {
+            "type": "string"
+          }
+        }
+      ],
+      "name": "translations",
+      "_id": 7
+    },
+    {
+      "attributes": [
+        {
+          "name": "title",
+          "editable": true,
+          "params": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "creator",
+          "editable": true,
+          "params": {
+            "type": "relation",
+            "target": "users",
+            "key": "users",
+            "nature": "manyToOne",
+            "targetColumnName": "email"
+          }
+        }
+      ],
+      "name": "farms",
+      "_id": 8
+    },
+    {
+      "name": "nirscans",
+      "_id": 9
+    }
+  ],
+  "batches": [
+    {
+      "id": "ace807a5-eb12-41de-b7d5-522612ab2d6f",
+      "batchNumber": 1352,
+      "companyId": 194,
+      "totalSamples": 1,
+      "processedSamples": 1,
+      "limsMaterialCode": "40030",
+      "limsMaterialDescription": "Alfalfa meal CP 16-18%",
+      "mosaicProductCode": "722201",
+      "mosaicProductDescription": "Alfalfa ground NutriOpt Large cup",
+      "limsProfileId": "11",
+      "limsProfileDescription": "General - Pigs - Poultry - Ruminants",
+      "creationDate": "2019-12-16T10:57:49.103Z"
+    },
+    {
+      "id": "017749ae-ab11-4d7e-b8f2-39d4fe11aaa9",
+      "batchNumber": 1351,
+      "companyId": 194,
+      "totalSamples": 4,
+      "processedSamples": 4,
+      "limsMaterialCode": "40020",
+      "limsMaterialDescription": "Alfalfa meal CP 14-16%",
+      "mosaicProductCode": "722200",
+      "mosaicProductDescription": "Alfalfa unground NutriOpt Large cup",
+      "limsProfileId": "02",
+      "limsProfileDescription": "General",
+      "creationDate": "2019-11-29T20:01:34.167Z"
+    },
+    {
+      "id": "6af721d2-7f74-4c0b-a9c1-6edaab0841ba",
+      "batchNumber": 1350,
+      "companyId": 194,
+      "totalSamples": 4,
+      "processedSamples": "6",
+      "limsMaterialCode": "16460",
+      "limsMaterialDescription": "Barley pregelatinised",
+      "mosaicProductCode": "700201",
+      "mosaicProductDescription": "Barley ground NutriOpt Large cup",
+      "limsProfileId": "11",
+      "limsProfileDescription": "General - Pigs - Poultry - Ruminants",
+      "creationDate": "2019-11-25T15:26:41.8Z"
+    }
+  ],
+  "users-permissions_user": [
+    {
+      "gender": "unknown",
+      "verified": false,
+      "loginAttempts": 0,
+      "email": "jellehak@gmail.com",
+      "password": "$2a$10$wH4hCQTNwCAZ.8QUpNLaQewYhLipt/j41PYQawSScyr2WEbuk609q",
+      "secret": "i6NEwUcmUcAgz2Xw",
+      "_id": 1,
+      "role": "Administrator"
+    },
+    {
+      "email": "jhak@conclusion.nl",
+      "_id": 2,
+      "blocked": true,
+      "password": "23423"
+    }
+  ],
+  "products": [
+      {
+        "id": "722201",
+        "name": "Alfalfa ground NutriOpt Large cup"
+      },
+      {
+        "id": "722201",
+        "name": "Alfalfa ground NutriOpt Quarter cup"
+      },
+      {
+        "id": "722200",
+        "name": "Alfalfa unground NutriOpt Large cup"
+      },
+      {
+        "id": "700201",
+        "name": "Barley ground NutriOpt Large cup"
+      },
+      {
+        "id": "700201",
+        "name": "Barley ground NutriOpt Quarter cup"
+      },
+      {
+        "id": "700200",
+        "name": "Barley unground NutriOpt Large cup"
+      },
+      {
+        "id": "781801",
+        "name": "Beans ground NutriOpt Large cup"
+      },
+      {
+        "id": "719201",
+        "name": "Beetpulp ground NutriOpt Large cup"
+      },
+      {
+        "id": "719201",
+        "name": "Beetpulp ground NutriOpt Quarter cup"
+      },
+      {
+        "id": "719200",
+        "name": "Beetpulp unground NutriOpt Large cup"
+      },
+      {
+        "id": "728000",
+        "name": "Bloodmeal unground NutriOpt Large cup"
+      },
+      {
+        "id": "702301",
+        "name": "Breadmeal ground NutriOpt Large cup"
+      },
+      {
+        "id": "702301",
+        "name": "Breadmeal ground NutriOpt Quarter cup"
+      },
+      {
+        "id": "702300",
+        "name": "Breadmeal unground NutriOpt Large cup"
+      },
+      {
+        "id": "84001",
+        "name": "Broilerfeed unground NutriOpt Large cup"
+      },
+      {
+        "id": "82000",
+        "name": "Cattle feed ground NutriOpt Large cup"
+      },
+      {
+        "id": "82001",
+        "name": "Cattle feed unground NutriOpt Large cup"
+      },
+      {
+        "id": "719401",
+        "name": "Citruspulp ground NutriOpt Large cup"
+      },
+      {
+        "id": "719401",
+        "name": "Citruspulp ground NutriOpt Quarter cup"
+      },
+      {
+        "id": "712501",
+        "name": "Coconutmeal ground NutriOpt Large cup"
+      },
+      {
+        "id": "712501",
+        "name": "Coconutmeal ground NutriOpt Quarter cup"
+      },
+      {
+        "id": "717101",
+        "name": "Corn DDGS ground NutriOpt Large cup"
+      },
+      {
+        "id": "717101",
+        "name": "Corn DDGS ground NutriOpt Quarter cup"
+      },
+      {
+        "id": "717100",
+        "name": "Corn DDGS unground NutriOpt Large cup"
+      },
+      {
+        "id": "700101",
+        "name": "Corn ground NutriOpt Large cup"
+      },
+      {
+        "id": "700101",
+        "name": "Corn ground NutriOpt Quarter cup"
+      },
+      {
+        "id": "700100",
+        "name": "Corn unground NutriOpt Large cup"
+      },
+      {
+        "id": "704101",
+        "name": "Cornbyproducts ground NutriOpt Large cup"
+      },
+      {
+        "id": "704101",
+        "name": "Cornbyproducts ground NutriOpt Quarter cup"
+      },
+      {
+        "id": "704100",
+        "name": "Cornbyproducts unground NutriOpt Large cup"
+      },
+      {
+        "id": "704001",
+        "name": "Corngluten 60 ground NutriOpt Large cup"
+      },
+      {
+        "id": "704001",
+        "name": "Corngluten 60 ground NutriOpt Quarter cup"
+      },
+      {
+        "id": "704000",
+        "name": "Corngluten 60 unground NutriOpt Large cup"
+      },
+      {
+        "id": "400402",
+        "name": "Cornsilage Dry ground NutriOpt Large cup"
+      },
+      {
+        "id": "400401",
+        "name": "Cornsilage Dry ground NutriOpt Small cup"
+      },
+      {
+        "id": "400400",
+        "name": "Cornsilage unground NutriOpt Large cup"
+      },
+      {
+        "id": "400400",
+        "name": "Cornsilage Wet unground NutriOpt Large cup"
+      },
+      {
+        "id": "730001",
+        "name": "Cottonseedmeal ground NutriOpt Large cup"
+      },
+      {
+        "id": "730000",
+        "name": "Cottonseedmeal unground NutriOpt Large cup"
+      },
+      {
+        "id": "6500",
+        "name": "Fat & Oil NutriOpt gold reflec 0,2mm Small DS Cup"
+      },
+      {
+        "id": "6500",
+        "name": "Fat & Oil NutriOpt gold reflector 0,2mm Small cup"
+      },
+      {
+        "id": "FE",
+        "name": "Feather meal unground NutriOpt Large  Cup"
+      },
+      {
+        "id": "728800",
+        "name": "Feathermeal unground NutriOpt Large Cup"
+      },
+      {
+        "id": "727001",
+        "name": "Fishmeal ground NutriOpt Large cup"
+      },
+      {
+        "id": "727001",
+        "name": "Fishmeal ground NutriOpt Quarter cup"
+      },
+      {
+        "id": "727000",
+        "name": "Fishmeal unground NutriOpt Large cup"
+      },
+      {
+        "id": "400302",
+        "name": "Grassilage Dry ground NutriOpt Large cup"
+      },
+      {
+        "id": "400301",
+        "name": "Grassilage Dry ground NutriOpt Small cup"
+      },
+      {
+        "id": "400300",
+        "name": "Grassilage unground NutriOpt Large cup"
+      },
+      {
+        "id": "400300",
+        "name": "Grassilage Wet unground NutriOpt Large cup"
+      },
+      {
+        "id": "712101",
+        "name": "Groundnutmeal ground NutriOpt Large cup"
+      },
+      {
+        "id": "712101",
+        "name": "Groundnutmeal ground NutriOpt Quarter cup"
+      },
+      {
+        "id": "712100",
+        "name": "Groundnutmeal unground NutriOpt Large cup"
+      },
+      {
+        "id": "710600",
+        "name": "Linseed unground NutriOpt Large cup"
+      },
+      {
+        "id": "713100",
+        "name": "Linseedmeal unground NutriOpt Large cup"
+      },
+      {
+        "id": "782300",
+        "name": "Lupin unground NutriOpt Large cup"
+      },
+      {
+        "id": "727401",
+        "name": "Meat and Bonemeal ground NutriOpt Large cup"
+      },
+      {
+        "id": "727401",
+        "name": "Meat and Bonemeal ground NutriOpt Quarter cup"
+      },
+      {
+        "id": "727400",
+        "name": "Meat and Bonemeal unground NutriOpt Large cup"
+      },
+      {
+        "id": "703701",
+        "name": "Oat ground NutriOpt Large cup"
+      },
+      {
+        "id": "703701",
+        "name": "Oat ground NutriOpt Quarter cup"
+      },
+      {
+        "id": "703700",
+        "name": "Oat unground NutriOpt Large cup"
+      },
+      {
+        "id": "712801",
+        "name": "Palmkernelmeal ground NutriOpt Large cup"
+      },
+      {
+        "id": "712801",
+        "name": "Palmkernelmeal ground NutriOpt Quarter cup"
+      },
+      {
+        "id": "712800",
+        "name": "Palmkernelmeal unground NutriOpt Large cup"
+      },
+      {
+        "id": "716201",
+        "name": "Peas ground NutriOpt Large cup"
+      },
+      {
+        "id": "716201",
+        "name": "Peas ground NutriOpt Quarter cup"
+      },
+      {
+        "id": "716200",
+        "name": "Peas unground NutriOpt Large cup"
+      },
+      {
+        "id": "729601",
+        "name": "Prot AEL ground NutriOpt Large cup"
+      },
+      {
+        "id": "729600",
+        "name": "Prot AEL unground NutriOpt Large cup"
+      },
+      {
+        "id": "709301",
+        "name": "Rapeseed full fat ground NutriOpt Large cup"
+      },
+      {
+        "id": "709300",
+        "name": "Rapeseed full fat unground NutriOpt Large cup"
+      },
+      {
+        "id": "713001",
+        "name": "Rapeseedmeal ground NutriOpt Large cup"
+      },
+      {
+        "id": "713001",
+        "name": "Rapeseedmeal ground NutriOpt Quarter cup"
+      },
+      {
+        "id": "713000",
+        "name": "Rapeseedmeal unground NutriOpt Large cup"
+      },
+      {
+        "id": "699901",
+        "name": "Rice Broken ground NutriOpt Large cup"
+      },
+      {
+        "id": "699901",
+        "name": "Rice broken ground NutriOpt Quarter cup"
+      },
+      {
+        "id": "699900",
+        "name": "Rice Broken unground NutriOpt Large cup"
+      },
+      {
+        "id": "700001",
+        "name": "Ricebyproducts ground NutriOpt Quarter cup"
+      },
+      {
+        "id": "700001",
+        "name": "Ricebyproducts NutriOpt ground Large cup"
+      },
+      {
+        "id": "700000",
+        "name": "Ricebyproducts unground NutriOpt Large cup"
+      },
+      {
+        "id": "701000",
+        "name": "Rye unground NutriOpt Large cup"
+      },
+      {
+        "id": "700701",
+        "name": "Sorghum ground NutriOpt Large cup"
+      },
+      {
+        "id": "700701",
+        "name": "Sorghum ground NutriOpt Quarter cup"
+      },
+      {
+        "id": "700700",
+        "name": "Sorghum unground NutriOpt Large cup"
+      },
+      {
+        "id": "709101",
+        "name": "Soyabean full fat ground NutriOpt Large cup"
+      },
+      {
+        "id": "709101",
+        "name": "Soyabean full fat ground NutriOpt Quarter cup"
+      },
+      {
+        "id": "709100",
+        "name": "Soyabean full fat unground NutriOpt Large cup"
+      },
+      {
+        "id": "711101",
+        "name": "Soyabeanmeal ground NutriOpt Large cup"
+      },
+      {
+        "id": "711101",
+        "name": "Soyabeanmeal ground NutriOpt Quarter cup"
+      },
+      {
+        "id": "711100",
+        "name": "Soyabeanmeal unground NutriOpt Large cup"
+      },
+      {
+        "id": "722701",
+        "name": "Soyahulls ground NutriOpt Large cup"
+      },
+      {
+        "id": "722700",
+        "name": "Soyahulls unground NutriOpt Large cup"
+      },
+      {
+        "id": "711501",
+        "name": "Sunflowermeal ground NutriOpt Large cup"
+      },
+      {
+        "id": "711501",
+        "name": "Sunflowermeal ground NutriOpt Quarter cup"
+      },
+      {
+        "id": "711500",
+        "name": "Sunflowermeal unground NutriOpt Large cup"
+      },
+      {
+        "id": "718101",
+        "name": "Tapioca ground NutriOpt Large cup"
+      },
+      {
+        "id": "718101",
+        "name": "Tapioca ground NutriOpt Quarter cup"
+      },
+      {
+        "id": "701200",
+        "name": "Triticale unground NutriOpt Large cup"
+      },
+      {
+        "id": "700401",
+        "name": "Wheat ground NutriOpt Large cup"
+      },
+      {
+        "id": "700401",
+        "name": "Wheat ground NutriOpt Quarter cup"
+      },
+      {
+        "id": "700400",
+        "name": "Wheat unground NutriOpt Large cup"
+      },
+      {
+        "id": "705001",
+        "name": "Wheatbyproducts ground NutriOpt Large cup"
+      },
+      {
+        "id": "705001",
+        "name": "Wheatbyproducts ground NutriOpt Quarter cup"
+      },
+      {
+        "id": "705000",
+        "name": "Wheatbyproducts unground NutriOpt Large cup"
+      },
+      {
+        "id": "724800",
+        "name": "Wheypowder NutriOpt Large cup"
+      },
+      {
+        "id": "724800",
+        "name": "Wheypowder unground NutriOpt Quarter cup"
+      }
+    ],
+  "materials": [
+    {
+      "_id": 1,
+      "name": "Barley",
+      "amount": "102",
+      "createdAt": "2019-11-15"
+    },
+    {
+      "_id": 2,
+      "name": "Barley",
+      "amount": "9",
+      "createdAt": "2019-11-30"
+    }
+  ],
+  "users-permissions_role": [
+    {
+      "_id": "5b586fafb11cd20be009ff2d",
+      "name": "Administrator",
+      "description": "These users have all access in the project.",
+      "type": "root"
+    },
+    {
+      "_id": "5b586fafb11cd20be009ff2e",
+      "name": "Authenticated",
+      "description": "Default role given to authenticated user.",
+      "type": "authenticated"
+    },
+    {
+      "_id": "5b586fafb11cd20be009ff2f",
+      "name": "Public",
+      "description": "Default role given to unauthenticated user.",
+      "type": "public"
+    }
+  ],
+  "farms": [
+    {
+      "_id": 1,
+      "title": "Farm 1",
+      "creator": "jhak@conclusion.nl"
+    },
+    {
+      "creator": "jhak@conclusion.nl",
+      "title": "Farm 2",
+      "_id": 2
+    },
+    {
+      "title": "Farm 3",
+      "creator": "jhak@conclusion.nl",
+      "_id": 3
+    }
+  ],
+  "translations": [
+    {
+      "key": "Hello",
+      "translation": "Hallo",
+      "language": "nl",
+      "_id": 1
+    },
+    {
+      "key": "World",
+      "translation": "Wereld",
+      "language": "nl",
+      "_id": 2
+    }
+  ]
+}

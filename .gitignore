@@ -1,2 +1,5 @@
+/public_html/uploads/*
+/public_html/themes/*
+!/public_html/themes/2020
+config.php
 /storage
-/uploads
